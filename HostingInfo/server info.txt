@@ -2,6 +2,7 @@ AWS EC2 Server Details
 ======================
 Public DNS - ec2-54-169-242-203.ap-southeast-1.compute.amazonaws.com
 User name - Administrator
+IIS site name - api
 Password - RxV6kp@Z4rY8)p=A$?fYPBe5%lYEjjhX
 
 MYSQL RDS Credentials

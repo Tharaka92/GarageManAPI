@@ -21,17 +21,10 @@ namespace Breakdown.EndSystems.IdentityConfig
         {
             var principal = await base.CreateAsync(user);
 
-            if (!string.IsNullOrWhiteSpace(user.FirstName))
+            if (!string.IsNullOrWhiteSpace(user.Name))
             {
                 ((ClaimsIdentity)principal.Identity).AddClaims(new[] {
-                    new Claim(ClaimTypes.GivenName, user.FirstName)
-                });
-            }
-
-            if (!string.IsNullOrWhiteSpace(user.LastName))
-            {
-                ((ClaimsIdentity)principal.Identity).AddClaims(new[] {
-                    new Claim(ClaimTypes.Surname, user.LastName),
+                    new Claim(ClaimTypes.GivenName, user.Name)
                 });
             }
 
