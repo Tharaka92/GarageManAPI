@@ -53,8 +53,7 @@ namespace Breakdown.API.Controllers.v1
                     var appUser = await _userManager.FindByEmailAsync(loginmodel.Email);
                     var roles = await _userManager.GetRolesAsync(appUser);
 
-                    loginmodel.FirstName = appUser.FirstName;
-                    loginmodel.LastName = appUser.LastName;
+                    loginmodel.Name = appUser.Name;
                     loginmodel.Email = appUser.Email;
                     loginmodel.Country = appUser.Country;
                     loginmodel.PhoneNumber = appUser.PhoneNumber;
@@ -96,8 +95,7 @@ namespace Breakdown.API.Controllers.v1
 
                 var user = new ApplicationUser
                 {
-                    FirstName = registerModel.FirstName,
-                    LastName = registerModel.LastName,
+                    Name = registerModel.Name,
                     Country = registerModel.Country,
                     PhoneNumber = registerModel.PhoneNumber,
                     UserName = registerModel.Email,
