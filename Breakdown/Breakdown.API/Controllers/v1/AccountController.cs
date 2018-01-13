@@ -60,11 +60,11 @@ namespace Breakdown.API.Controllers.v1
                     loginmodel.Token = await TokenFactory.GenerateJwtToken(loginmodel.Email, appUser, _configuration);
                     loginmodel.RoleName = roles.FirstOrDefault();
 
-                    return StatusCode(StatusCodes.Status200OK, loginmodel);
+                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, AuthData = loginmodel });
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status417ExpectationFailed, result);
+                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, Errors = result });
                 }
             }
             catch (Exception ex)
@@ -113,11 +113,11 @@ namespace Breakdown.API.Controllers.v1
                 {
                     await _signInManager.SignInAsync(user, false);
                     registerModel.Token = await TokenFactory.GenerateJwtToken(registerModel.Email, user, _configuration);
-                    return Created("", registerModel); 
+                    return Created("", new { Issucceeded = result.Succeeded, AuthData = registerModel }); 
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status417ExpectationFailed, result.Errors);
+                    return StatusCode(StatusCodes.Status200OK, new { Issucceeded = result.Succeeded, Errors = result.Errors });
                 }
             }
             catch (Exception ex)
