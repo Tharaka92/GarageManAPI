@@ -64,7 +64,7 @@ namespace Breakdown.API.Controllers.v1
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, Errors = result });
+                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, Error = "Invalid email or password." });
                 }
             }
             catch (Exception ex)
@@ -117,7 +117,7 @@ namespace Breakdown.API.Controllers.v1
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status200OK, new { Issucceeded = result.Succeeded, Errors = result.Errors });
+                    return StatusCode(StatusCodes.Status200OK, new { Issucceeded = result.Succeeded,  Error = "Something went wrong." });
                 }
             }
             catch (Exception ex)
