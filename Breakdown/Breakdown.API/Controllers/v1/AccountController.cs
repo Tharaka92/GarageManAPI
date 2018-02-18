@@ -117,7 +117,7 @@ namespace Breakdown.API.Controllers.v1
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status200OK, new { Issucceeded = result.Succeeded,  Error = "Something went wrong." });
+                    return StatusCode(StatusCodes.Status200OK, new { Issucceeded = result.Succeeded, Errors = result.Errors  });
                 }
             }
             catch (Exception ex)
