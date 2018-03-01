@@ -85,7 +85,7 @@ namespace Breakdown.API.Controllers.v1
             {
                 if (!ModelState.IsValid)
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+                    return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = ModelState.IsValid, Errors = ModelState });
                 }
 
                 if (!await _roleManager.RoleExistsAsync(registerModel.RoleName))
@@ -113,11 +113,11 @@ namespace Breakdown.API.Controllers.v1
                 {
                     await _signInManager.SignInAsync(user, false);
                     registerModel.Token = await TokenFactory.GenerateJwtToken(registerModel.Email, user, _configuration);
-                    return Created("", new { Issucceeded = result.Succeeded, AuthData = registerModel }); 
+                    return Created("", new { IsSucceeded = result.Succeeded, AuthData = registerModel }); 
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status200OK, new { Issucceeded = result.Succeeded, Errors = result.Errors  });
+                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, Errors = result.Errors  });
                 }
             }
             catch (Exception ex)
