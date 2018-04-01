@@ -53,6 +53,7 @@ namespace Breakdown.API.Controllers.v1
                     var appUser = await _userManager.FindByEmailAsync(loginmodel.Email);
                     var roles = await _userManager.GetRolesAsync(appUser);
 
+                    loginmodel.UserId = appUser.Id;
                     loginmodel.Name = appUser.Name;
                     loginmodel.Email = appUser.Email;
                     loginmodel.Country = appUser.Country;
@@ -112,7 +113,10 @@ namespace Breakdown.API.Controllers.v1
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, false);
+
+                    registerModel.UserId = user.Id;
                     registerModel.Token = await TokenFactory.GenerateJwtToken(registerModel.Email, user, _configuration);
+
                     return Created("", new { IsSucceeded = result.Succeeded, AuthData = registerModel }); 
                 }
                 else
