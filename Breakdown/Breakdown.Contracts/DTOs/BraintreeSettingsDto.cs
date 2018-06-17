@@ -6,9 +6,9 @@ namespace Breakdown.Contracts.DTOs
 {
     public class BraintreeSettingsDto
     {
-        public string Environment { get; set; }
-        public string MerchantId { get; set; }
-        public string PublicKey { get; set; }
-        public string PrivateKey { get; set; }
+        public string BraintreeEnvironment { get; set; }
+        public string BraintreeMerchantId { get; set; }
+        public string BraintreePublicKey { get; set; }
+        public string BraintreePrivateKey { get; set; }
     }
 }

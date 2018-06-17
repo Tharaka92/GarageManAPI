@@ -22,10 +22,10 @@ namespace Breakdown.EndSystems.Braintree
         {
             _braintreeSettings = braintreeSettings;
 
-            Environment = _braintreeSettings.Value.Environment;
-            MerchantId = _braintreeSettings.Value.MerchantId;
-            PublicKey = _braintreeSettings.Value.PublicKey;
-            PrivateKey = _braintreeSettings.Value.PrivateKey;
+            Environment = _braintreeSettings.Value.BraintreeEnvironment;
+            MerchantId = _braintreeSettings.Value.BraintreeMerchantId;
+            PublicKey = _braintreeSettings.Value.BraintreePublicKey;
+            PrivateKey = _braintreeSettings.Value.BraintreePrivateKey;
 
             BraintreeGateway = new BraintreeGateway(Environment, MerchantId, PublicKey, PrivateKey);
         }
@@ -54,8 +54,7 @@ namespace Breakdown.EndSystems.Braintree
 
         public async Task<string> GenerateToken()
         {
-            var clientToken = await BraintreeGateway.ClientToken.GenerateAsync();
-            return clientToken;
+            return await BraintreeGateway.ClientToken.GenerateAsync();
         }
     }
 }
