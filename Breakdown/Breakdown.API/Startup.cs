@@ -1,5 +1,7 @@
-﻿using Breakdown.Contracts.DTOs;
+﻿using Breakdown.Contracts.Braintree;
+using Breakdown.Contracts.DTOs;
 using Breakdown.Domain.Entities;
+using Breakdown.EndSystems.Braintree;
 using Breakdown.EndSystems.IdentityConfig;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -28,6 +30,7 @@ namespace Breakdown.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<ConnectionStringDto>(Configuration.GetSection("ConnectionStrings"));
+            services.Configure<BraintreeSettingsDto>(Configuration.GetSection("BraintreeSettings"));
 
             // ===== Add DbContext ========
             services.AddDbContext<ApplicationDbContext>();
@@ -37,7 +40,9 @@ namespace Breakdown.API
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            // ===== Add DI ========
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
+            services.AddScoped<IBraintreeConfiguration, BraintreeConfiguration>();
 
             // ===== Add Jwt Authentication ========
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
