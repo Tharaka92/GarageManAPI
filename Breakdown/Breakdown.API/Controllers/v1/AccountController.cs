@@ -39,29 +39,29 @@ namespace Breakdown.API.Controllers.v1
         /// <summary>
         /// Login a user to the platform
         /// </summary>
-        /// <param name="loginmodel"></param>
+        /// <param name="loginModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginDto loginmodel)
+        public async Task<IActionResult> Login([FromBody] LoginDto loginModel)
         {
             try
             {
-                var result = await _signInManager.PasswordSignInAsync(loginmodel.Email, loginmodel.Password, false, false);
+                var result = await _signInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, false, false);
 
                 if (result.Succeeded)
                 {
-                    var appUser = await _userManager.FindByEmailAsync(loginmodel.Email);
+                    var appUser = await _userManager.FindByEmailAsync(loginModel.Email);
                     var roles = await _userManager.GetRolesAsync(appUser);
 
-                    loginmodel.UserId = appUser.Id;
-                    loginmodel.Name = appUser.Name;
-                    loginmodel.Email = appUser.Email;
-                    loginmodel.Country = appUser.Country;
-                    loginmodel.PhoneNumber = appUser.PhoneNumber;
-                    loginmodel.Token = await TokenFactory.GenerateJwtToken(loginmodel.Email, appUser, _configuration);
-                    loginmodel.RoleName = roles.FirstOrDefault();
+                    loginModel.UserId = appUser.Id;
+                    loginModel.Name = appUser.Name;
+                    loginModel.Email = appUser.Email;
+                    loginModel.Country = appUser.Country;
+                    loginModel.PhoneNumber = appUser.PhoneNumber;
+                    loginModel.Token = await TokenFactory.GenerateJwtToken(loginModel.Email, appUser, _configuration);
+                    loginModel.RoleName = roles.FirstOrDefault();
 
-                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, AuthData = loginmodel });
+                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, AuthData = loginModel });
                 }
                 else
                 {

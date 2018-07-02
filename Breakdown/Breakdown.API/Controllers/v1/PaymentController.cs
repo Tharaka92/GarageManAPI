@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Breakdown.Contracts.Braintree;
+using Breakdown.Contracts.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +24,20 @@ namespace Breakdown.API.Controllers.v1
         {
             try
             {
-                return StatusCode(StatusCodes.Status200OK, new { Token = await _braintreeConfig.GenerateToken() });
+                return StatusCode(StatusCodes.Status200OK, await _braintreeConfig.GenerateToken());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Checkout([FromBody] PaymentDto paymentModel)
+        {
+            try
+            {
+                return StatusCode(StatusCodes.Status200OK, await _braintreeConfig.CreateSale(paymentModel.Nonce, paymentModel.Amount));
             }
             catch (Exception ex)
             {
