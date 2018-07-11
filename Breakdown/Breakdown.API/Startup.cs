@@ -1,4 +1,6 @@
-﻿using Breakdown.Contracts.Braintree;
+﻿using AutoMapper;
+using Breakdown.API.AutoMapperConfig;
+using Breakdown.Contracts.Braintree;
 using Breakdown.Contracts.DTOs;
 using Breakdown.Domain.Entities;
 using Breakdown.EndSystems.Braintree;
@@ -68,6 +70,7 @@ namespace Breakdown.API
                     };
                 });
 
+            services.AddAutoMapper(am => am.AddProfile(new MappingProfile()));
             services.AddMvc();
         }
 

@@ -20,5 +20,7 @@ namespace Breakdown.EndSystems.IdentityConfig
         {
             optionsBuilder.UseMySql(_connectionString.Value.BreakdownDb);
         }
+
+        public DbSet<Package> Packages { get; set; }
     }
 }
