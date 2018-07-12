@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Breakdown.API.Controllers
@@ -6,7 +7,7 @@ namespace Breakdown.API.Controllers
     [Route("api/[controller]")]
     public class WelcomeController : Controller
     {
-        // GET api/values
+        // GET api/welcome
         /// <summary>
         /// Junk method to check API availability
         /// </summary>

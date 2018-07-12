@@ -105,13 +105,13 @@ namespace Breakdown.API.Controllers.v1
 
                 var result = await _userManager.CreateAsync(user, registerModel.Password);
 
-                if (!await _userManager.IsInRoleAsync(user, registerModel.RoleName))
-                {
-                    await _userManager.AddToRoleAsync(user, registerModel.RoleName);
-                }
-
                 if (result.Succeeded)
                 {
+                    if (!await _userManager.IsInRoleAsync(user, registerModel.RoleName))
+                    {
+                        await _userManager.AddToRoleAsync(user, registerModel.RoleName);
+                    }
+
                     await _signInManager.SignInAsync(user, false);
 
                     registerModel.UserId = user.Id;
