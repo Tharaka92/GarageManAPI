@@ -48,6 +48,7 @@ namespace Breakdown.API
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
             services.AddTransient<IBraintreeConfiguration, BraintreeConfiguration>();
             services.AddTransient<IPackageRepository, PackageRepository>();
+            services.AddTransient<IVehicleRepository, VehicleRepository>();
 
             // ===== Add Jwt Authentication ========
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
@@ -69,7 +70,7 @@ namespace Breakdown.API
                         ValidIssuer = Configuration["JwtIssuer"],
                         ValidAudience = Configuration["JwtIssuer"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
-                        ClockSkew = TimeSpan.Zero // remove delay of token when expire
+                        ClockSkew = TimeSpan.Zero
                     };
                 });
 

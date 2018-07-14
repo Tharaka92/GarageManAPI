@@ -13,6 +13,7 @@ namespace Breakdown.API.AutoMapperConfig
         public MappingProfile()
         {
             CreateMap<Package, PackageDto>().ReverseMap();
+            CreateMap<Vehicle, VehicleDto>().ReverseMap();
         }
     }
 }
