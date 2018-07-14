@@ -2,9 +2,11 @@
 using Breakdown.API.AutoMapperConfig;
 using Breakdown.Contracts.Braintree;
 using Breakdown.Contracts.DTOs;
+using Breakdown.Contracts.Interfaces;
 using Breakdown.Domain.Entities;
 using Breakdown.EndSystems.Braintree;
 using Breakdown.EndSystems.IdentityConfig;
+using Breakdown.EndSystems.MySql.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -44,7 +46,8 @@ namespace Breakdown.API
 
             // ===== Add DI ========
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
-            services.AddScoped<IBraintreeConfiguration, BraintreeConfiguration>();
+            services.AddTransient<IBraintreeConfiguration, BraintreeConfiguration>();
+            services.AddTransient<IPackageRepository, PackageRepository>();
 
             // ===== Add Jwt Authentication ========
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims

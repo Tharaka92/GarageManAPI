@@ -13,7 +13,7 @@ namespace Breakdown.API.TokenUtilities
 {
     public static class TokenFactory
     {
-        public static async Task<string> GenerateJwtToken(string email, IdentityUser user, IConfiguration configuration)
+        public static string GenerateJwtToken(string email, IdentityUser user, IConfiguration configuration)
         {
             var claims = new List<Claim>
             {

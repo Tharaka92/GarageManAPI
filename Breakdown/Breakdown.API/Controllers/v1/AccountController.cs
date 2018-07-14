@@ -16,7 +16,7 @@ namespace Breakdown.API.Controllers.v1
 {
     [Produces("application/json")]
     [Route("api/v1/[controller]/[action]")]
-    public class AccountController : Controller
+    public class AccountController : ControllerBase
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -58,7 +58,7 @@ namespace Breakdown.API.Controllers.v1
                     loginModel.Email = appUser.Email;
                     loginModel.Country = appUser.Country;
                     loginModel.PhoneNumber = appUser.PhoneNumber;
-                    loginModel.Token = await TokenFactory.GenerateJwtToken(loginModel.Email, appUser, _configuration);
+                    loginModel.Token = TokenFactory.GenerateJwtToken(loginModel.Email, appUser, _configuration);
                     loginModel.RoleName = roles.FirstOrDefault();
 
                     return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, AuthData = loginModel });
@@ -115,7 +115,7 @@ namespace Breakdown.API.Controllers.v1
                     await _signInManager.SignInAsync(user, false);
 
                     registerModel.UserId = user.Id;
-                    registerModel.Token = await TokenFactory.GenerateJwtToken(registerModel.Email, user, _configuration);
+                    registerModel.Token = TokenFactory.GenerateJwtToken(registerModel.Email, user, _configuration);
 
                     return Created("", new { IsSucceeded = result.Succeeded, AuthData = registerModel }); 
                 }

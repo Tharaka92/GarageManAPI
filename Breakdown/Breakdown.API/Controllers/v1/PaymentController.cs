@@ -11,7 +11,7 @@ namespace Breakdown.API.Controllers.v1
 {
     [Produces("application/json")]
     [Route("api/v1/[controller]/[action]")]
-    public class PaymentController : Controller
+    public class PaymentController : ControllerBase
     {
         private readonly IBraintreeConfiguration _braintreeConfig;
 
