@@ -7,6 +7,7 @@ namespace Breakdown.Contracts.DTOs
     public class VehicleDto
     {
         public int VehicleId { get; set; }
+        public string UserId { get; set; }
         public string LicensePlate { get; set; }
         public string VehicleType { get; set; }
         public string Make { get; set; }

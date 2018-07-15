@@ -28,7 +28,7 @@ namespace Breakdown.API.Controllers.v1
         {
             try
             {
-                IEnumerable<Vehicle> allVehicles = await _vehicleRepository.Retrieve(null);
+                IEnumerable<Vehicle> allVehicles = await _vehicleRepository.Retrieve(null, null);
                 if (allVehicles.Count() > 0)
                 {
                     IEnumerable<VehicleDto> allVehicleDtos = _autoMapper.Map<IEnumerable<VehicleDto>>(allVehicles);
@@ -49,11 +49,32 @@ namespace Breakdown.API.Controllers.v1
         {
             try
             {
-                IEnumerable<Vehicle> requestedVehicle = await _vehicleRepository.Retrieve(vehicleId);
+                IEnumerable<Vehicle> requestedVehicle = await _vehicleRepository.Retrieve(vehicleId, null);
                 if (requestedVehicle.Count() > 0)
                 {
                     VehicleDto requestedVehicleDto = _autoMapper.Map<VehicleDto>(requestedVehicle.SingleOrDefault());
                     return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Vehicle = requestedVehicleDto });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status204NoContent);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error Occured." });
+            }
+        }
+
+        public async Task<ActionResult> GetByUserId(string userId)
+        {
+            try
+            {
+                IEnumerable<Vehicle> requestedVehicle = await _vehicleRepository.Retrieve(null, userId);
+                if (requestedVehicle.Count() > 0)
+                {
+                    IEnumerable<VehicleDto> requestedVehiclesDto = _autoMapper.Map<IEnumerable<VehicleDto>>(requestedVehicle);
+                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Vehicles = requestedVehiclesDto });
                 }
                 else
                 {

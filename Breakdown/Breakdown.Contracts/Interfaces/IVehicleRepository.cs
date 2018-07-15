@@ -9,7 +9,7 @@ namespace Breakdown.Contracts.Interfaces
     public interface IVehicleRepository
     {
         Task<int> Create(Vehicle vehicleToCreate);
-        Task<IEnumerable<Vehicle>> Retrieve(int? vehicleId);
+        Task<IEnumerable<Vehicle>> Retrieve(int? vehicleId, string userId);
         Task<int> Update(Vehicle vehicleToUpdate);
         Task<int> Delete(int vehicleId);
     }

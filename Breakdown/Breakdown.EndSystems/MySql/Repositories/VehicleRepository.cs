@@ -28,6 +28,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
             {
                 SPInsertVehicle parameters = new SPInsertVehicle()
                 {
+                    UserId = vehicleToCreate.UserId,
                     LicensePlate = vehicleToCreate.LicensePlate,
                     VehicleType = vehicleToCreate.VehicleType,
                     Make = vehicleToCreate.Make,
@@ -69,13 +70,14 @@ namespace Breakdown.EndSystems.MySql.Repositories
             }
         }
 
-        public async Task<IEnumerable<Vehicle>> Retrieve(int? vehicleId)
+        public async Task<IEnumerable<Vehicle>> Retrieve(int? vehicleId, string userId)
         {
             try
             {
                 SPRetrieveVehicle parameters = new SPRetrieveVehicle
                 {
-                    VehicleId = vehicleId.HasValue ? vehicleId : null
+                    VehicleId = vehicleId.HasValue ? vehicleId : null,
+                    UserId = String.IsNullOrEmpty(userId) ? null : userId
                 };
 
                 using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))

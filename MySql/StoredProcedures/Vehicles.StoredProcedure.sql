@@ -8,6 +8,7 @@ VehicleId  int)
 BEGIN
  SELECT 
 	Vehicles.VehicleId,
+	Vehicles.UserId,
 	Vehicles.LicensePlate,
 	Vehicles.VehicleType,
 	Vehicles.Make,
@@ -18,6 +19,7 @@ BEGIN
  FROM Vehicles
  WHERE 
 	(1 = CASE WHEN VehicleId IS NULL THEN 1 WHEN Vehicles.VehicleId = VehicleId THEN 1 ELSE 0 END) AND
+	(1 = CASE WHEN UserId IS NULL THEN 1 WHEN Vehicles.UserId = UserId THEN 1 ELSE 0 END) AND
     Vehicles.IsDeleted = 0;
 END$$
 DELIMITER $$
@@ -28,6 +30,7 @@ DELIMITER $$
 
 DELIMITER $$
 CREATE PROCEDURE `SPInsertVehicle`(
+UserId varchar(127),
 LicensePlate varchar(50),
 VehicleType varchar(10),
 Make varchar(20),
@@ -35,7 +38,7 @@ Model varchar(20),
 Color varchar(10),
 YOM varchar(5))
 BEGIN
- INSERT INTO Vehicles (LicensePlate,VehicleType,Make,Model,Color,YOM) VALUES (LicensePlate,VehicleType,Make,Model,Color,YOM);
+ INSERT INTO Vehicles (UserId,LicensePlate,VehicleType,Make,Model,Color,YOM) VALUES (UserId,LicensePlate,VehicleType,Make,Model,Color,YOM);
 END$$
 DELIMITER $$
 
