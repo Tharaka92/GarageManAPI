@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,7 +41,7 @@ namespace Breakdown.API
             services.AddDbContext<ApplicationDbContext>();
 
             // ===== Add Identity ========
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole<int>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -75,7 +76,7 @@ namespace Breakdown.API
                 });
 
             services.AddAutoMapper(am => am.AddProfile(new MappingProfile()));
-            services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -90,9 +91,6 @@ namespace Breakdown.API
             app.UseAuthentication();
 
             app.UseMvc();
-
-            // ===== Migrate db changes if any ======
-            dbContext.Database.Migrate();
         }
     }
 }

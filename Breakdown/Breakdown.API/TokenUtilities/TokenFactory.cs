@@ -13,13 +13,13 @@ namespace Breakdown.API.TokenUtilities
 {
     public static class TokenFactory
     {
-        public static string GenerateJwtToken(string email, IdentityUser user, IConfiguration configuration)
+        public static string GenerateJwtToken(string email, IdentityUser<int> user, IConfiguration configuration)
         {
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtKey"]));

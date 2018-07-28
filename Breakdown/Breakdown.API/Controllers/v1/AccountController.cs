@@ -20,13 +20,13 @@ namespace Breakdown.API.Controllers.v1
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
         private readonly IConfiguration _configuration;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            RoleManager<IdentityRole> roleManager,
+            RoleManager<IdentityRole<int>> roleManager,
             IConfiguration configuration
             )
         {
@@ -91,7 +91,7 @@ namespace Breakdown.API.Controllers.v1
 
                 if (!await _roleManager.RoleExistsAsync(registerModel.RoleName))
                 {
-                    await _roleManager.CreateAsync(new IdentityRole() { Name = registerModel.RoleName });
+                    await _roleManager.CreateAsync(new IdentityRole<int>() { Name = registerModel.RoleName });
                 }
 
                 var user = new ApplicationUser

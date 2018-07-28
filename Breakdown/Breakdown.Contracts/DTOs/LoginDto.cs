@@ -4,7 +4,7 @@ namespace Breakdown.Contracts.DTOs
 {
     public class LoginDto
     {
-        public string UserId { get; set; }
+        public int UserId { get; set; }
 
         [Required]
         [EmailAddress]

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace Breakdown.EndSystems.IdentityConfig
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
     {
         private readonly IOptions<ConnectionStringDto> _connectionString;
 
