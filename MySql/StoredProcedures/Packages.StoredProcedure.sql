@@ -8,6 +8,7 @@ PackageId  int)
 BEGIN
  SELECT 
 	Packages.PackageId,
+	Packages.ServiceId,
 	Packages.Name,
 	Packages.Description,
 	Packages.Price,
@@ -25,6 +26,7 @@ DELIMITER $$
 
 DELIMITER $$
 CREATE PROCEDURE `SPInsertPackage`(
+ServiceId int,
 Name varchar(100),
 Description varchar(1000),
 Price decimal)

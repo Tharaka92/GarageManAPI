@@ -4,11 +4,9 @@ using System.Text;
 
 namespace Breakdown.EndSystems.MySql.StoredProcedures
 {
-    public class SPInsertPackage : SP
+    public class SPUpdateService : SP
     {
         public int ServiceId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public decimal Price { get; set; }
+        public string ServiceName { get; set; }
     }
 }

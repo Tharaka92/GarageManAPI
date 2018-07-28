@@ -3,26 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Breakdown.Contracts.DTOs;
+using Breakdown.API.ViewModels;
 using Breakdown.Contracts.Interfaces;
 using Breakdown.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
 namespace Breakdown.API.Controllers.v1
 {
     [ApiController]
-    [Produces("application/json")]
     [Route("api/v1/[controller]/[action]")]
-    public class VehicleController : ControllerBase
+    public class ServiceController : ControllerBase
     {
         private readonly IMapper _autoMapper;
-        private readonly IVehicleRepository _vehicleRepository;
+        private readonly IServiceRepository _serviceRepository;
 
-        public VehicleController(IMapper autoMapper, IVehicleRepository vehicleRepository)
+        public ServiceController(IMapper autoMapper, IServiceRepository serviceRepository)
         {
             _autoMapper = autoMapper;
-            _vehicleRepository = vehicleRepository;
+            _serviceRepository = serviceRepository;
         }
 
         [HttpGet]
@@ -30,11 +31,11 @@ namespace Breakdown.API.Controllers.v1
         {
             try
             {
-                IEnumerable<Vehicle> allVehicles = await _vehicleRepository.Retrieve(null, null);
-                if (allVehicles.Count() > 0)
+                IEnumerable<Service> allServices = await _serviceRepository.Retrieve(null);
+                if (allServices.Count() > 0)
                 {
-                    IEnumerable<VehicleDto> allVehicleDtos = _autoMapper.Map<IEnumerable<VehicleDto>>(allVehicles);
-                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Vehicles = allVehicleDtos });
+                    IEnumerable<ServiceViewModel> allServiceViewModels = _autoMapper.Map<IEnumerable<ServiceViewModel>>(allServices);
+                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Services = allServiceViewModels });
                 }
                 else
                 {
@@ -48,37 +49,15 @@ namespace Breakdown.API.Controllers.v1
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetById(int vehicleId)
+        public async Task<ActionResult> GetById(int serviceId)
         {
             try
             {
-                IEnumerable<Vehicle> requestedVehicle = await _vehicleRepository.Retrieve(vehicleId, null);
-                if (requestedVehicle.Count() > 0)
+                IEnumerable<Service> requestedService = await _serviceRepository.Retrieve(serviceId);
+                if (requestedService.Count() > 0)
                 {
-                    VehicleDto requestedVehicleDto = _autoMapper.Map<VehicleDto>(requestedVehicle.SingleOrDefault());
-                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Vehicle = requestedVehicleDto });
-                }
-                else
-                {
-                    return StatusCode(StatusCodes.Status204NoContent);
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error Occured." });
-            }
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> GetByUserId(string userId)
-        {
-            try
-            {
-                IEnumerable<Vehicle> requestedVehicle = await _vehicleRepository.Retrieve(null, userId);
-                if (requestedVehicle.Count() > 0)
-                {
-                    IEnumerable<VehicleDto> requestedVehiclesDto = _autoMapper.Map<IEnumerable<VehicleDto>>(requestedVehicle);
-                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Vehicles = requestedVehiclesDto });
+                    ServiceViewModel requestedServiceViewModel = _autoMapper.Map<ServiceViewModel>(requestedService.SingleOrDefault());
+                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Package = requestedServiceViewModel });
                 }
                 else
                 {
@@ -92,14 +71,14 @@ namespace Breakdown.API.Controllers.v1
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(VehicleDto vehicleToCreate)
+        public async Task<ActionResult> Create(ServiceViewModel serviceToCreate)
         {
             try
             {
-                if (vehicleToCreate != null)
+                if (serviceToCreate != null)
                 {
-                    Vehicle vehicleEntityToCreate = _autoMapper.Map<Vehicle>(vehicleToCreate);
-                    int affectedRows = await _vehicleRepository.Create(vehicleEntityToCreate);
+                    Service serviceEntityToCreate = _autoMapper.Map<Service>(serviceToCreate);
+                    int affectedRows = await _serviceRepository.Create(serviceEntityToCreate);
                     if (affectedRows == 1)
                     {
                         return StatusCode(StatusCodes.Status201Created);
@@ -121,14 +100,14 @@ namespace Breakdown.API.Controllers.v1
         }
 
         [HttpPut]
-        public async Task<ActionResult> Update(VehicleDto vehicleToUpdate)
+        public async Task<ActionResult> Update(ServiceViewModel serviceToUpdate)
         {
             try
             {
-                if (vehicleToUpdate != null)
+                if (serviceToUpdate != null)
                 {
-                    Vehicle vehicleEntityToUpdate = _autoMapper.Map<Vehicle>(vehicleToUpdate);
-                    int affectedRows = await _vehicleRepository.Update(vehicleEntityToUpdate);
+                    Service serviceEntityToUpdate = _autoMapper.Map<Service>(serviceToUpdate);
+                    int affectedRows = await _serviceRepository.Update(serviceEntityToUpdate);
                     if (affectedRows == 1)
                     {
                         return StatusCode(StatusCodes.Status200OK);
@@ -150,11 +129,11 @@ namespace Breakdown.API.Controllers.v1
         }
 
         [HttpDelete]
-        public async Task<ActionResult> Delete(int vehicleId)
+        public async Task<ActionResult> Delete(int serviceId)
         {
             try
             {
-                int affectedRows = await _vehicleRepository.Delete(vehicleId);
+                int affectedRows = await _serviceRepository.Delete(serviceId);
                 if (affectedRows == 1)
                 {
                     return StatusCode(StatusCodes.Status200OK);

@@ -14,6 +14,7 @@ using System.Net.Http;
 
 namespace Breakdown.API.Controllers.v1
 {
+    [ApiController]
     [Produces("application/json")]
     [Route("api/v1/[controller]/[action]")]
     public class AccountController : ControllerBase

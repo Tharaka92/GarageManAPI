@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Breakdown.API.Controllers.v1
 {
+    [ApiController]
     [Produces("application/json")]
     [Route("api/v1/[controller]/[action]")]
     public class PaymentController : ControllerBase
@@ -20,6 +21,7 @@ namespace Breakdown.API.Controllers.v1
             _braintreeConfig = braintreeConfig;
         }
 
+        [HttpGet]
         public async Task<IActionResult> GetToken()
         {
             try
@@ -33,7 +35,7 @@ namespace Breakdown.API.Controllers.v1
         }
 
         [HttpPost]
-        public async Task<IActionResult> Checkout([FromBody] PaymentDto paymentModel)
+        public async Task<IActionResult> Checkout(PaymentDto paymentModel)
         {
             try
             {

@@ -1,10 +1,9 @@
-﻿using Breakdown.Contracts.Interfaces;
-using Breakdown.Contracts.DTOs;
+﻿using Breakdown.Contracts.DTOs;
+using Breakdown.Contracts.Interfaces;
 using Breakdown.Domain.Entities;
 using Breakdown.EndSystems.MySql.StoredProcedures;
 using Dapper;
 using Microsoft.Extensions.Options;
-using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,25 +13,22 @@ using System.Threading.Tasks;
 
 namespace Breakdown.EndSystems.MySql.Repositories
 {
-    public class PackageRepository : IPackageRepository
+    public class ServiceRepository : IServiceRepository
     {
         private readonly IOptions<ConnectionStringDto> _connectionString;
 
-        public PackageRepository(IOptions<ConnectionStringDto> connectionString)
+        public ServiceRepository(IOptions<ConnectionStringDto> connectionString)
         {
             _connectionString = connectionString;
         }
 
-        public async Task<int> Create(Package packageToCreate)
+        public async Task<int> Create(Service serviceToCreate)
         {
             try
             {
-                SPInsertPackage parameters = new SPInsertPackage()
+                SPInsertService parameters = new SPInsertService()
                 {
-                    ServiceId = packageToCreate.ServiceId,
-                    Name = packageToCreate.Name,
-                    Description = packageToCreate.Description,
-                    Price = packageToCreate.Price
+                    ServiceName = serviceToCreate.ServiceName
                 };
 
                 using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))
@@ -47,13 +43,13 @@ namespace Breakdown.EndSystems.MySql.Repositories
             }
         }
 
-        public async Task<int> Delete(int packageId)
+        public async Task<int> Delete(int serviceId)
         {
             try
             {
-                SPDeletePackage parameters = new SPDeletePackage()
+                SPDeleteService parameters = new SPDeleteService()
                 {
-                    PackageId = packageId
+                    ServiceId = serviceId
                 };
 
                 using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))
@@ -68,19 +64,19 @@ namespace Breakdown.EndSystems.MySql.Repositories
             }
         }
 
-        public async Task<IEnumerable<Package>> Retrieve(int? packageId)
+        public async Task<IEnumerable<Service>> Retrieve(int? serviceId)
         {
             try
             {
-                SPRetrievePackage parameters = new SPRetrievePackage
+                SPRetrieveService parameters = new SPRetrieveService
                 {
-                    PackageId = packageId.HasValue ? packageId : null
+                    ServiceId = serviceId.HasValue ? serviceId : null
                 };
 
                 using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))
                 {
                     connection.Open();
-                    return await connection.QueryAsync<Package>(sql: parameters.GetName(), param: parameters, commandType: CommandType.StoredProcedure);
+                    return await connection.QueryAsync<Service>(sql: parameters.GetName(), param: parameters, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)
@@ -89,16 +85,14 @@ namespace Breakdown.EndSystems.MySql.Repositories
             }
         }
 
-        public async Task<int> Update(Package packageToUpdate)
+        public async Task<int> Update(Service serviceToUpdate)
         {
             try
             {
-                SPUpdatePackage parameters = new SPUpdatePackage()
+                SPUpdateService parameters = new SPUpdateService()
                 {
-                    PackageId = packageToUpdate.PackageId,
-                    Name = packageToUpdate.Name,
-                    Description = packageToUpdate.Description,
-                    Price = packageToUpdate.Price
+                    ServiceId = serviceToUpdate.ServiceId,
+                    ServiceName = serviceToUpdate.ServiceName
                 };
 
                 using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))

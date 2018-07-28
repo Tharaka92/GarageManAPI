@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Breakdown.API.ViewModels;
 using Breakdown.Contracts.DTOs;
 using Breakdown.Contracts.Interfaces;
 using Breakdown.Domain.Entities;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Breakdown.API.Controllers.v1
 {
+    [ApiController]
     [Produces("application/json")]
     [Route("api/v1/[controller]/[action]")]
     public class PackageController : ControllerBase
@@ -24,6 +26,7 @@ namespace Breakdown.API.Controllers.v1
             _packageRepository = packageRepository;
         }
 
+        [HttpGet]
         public async Task<ActionResult> GetAll()
         {
             try
@@ -31,8 +34,8 @@ namespace Breakdown.API.Controllers.v1
                 IEnumerable<Package> allPackages = await _packageRepository.Retrieve(null);
                 if (allPackages.Count() > 0)
                 {
-                    IEnumerable<PackageDto> allPackagesDtos = _autoMapper.Map<IEnumerable<PackageDto>>(allPackages);
-                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Packages = allPackagesDtos });
+                    IEnumerable<PackageViewModel> allPackageViewModels = _autoMapper.Map<IEnumerable<PackageViewModel>>(allPackages);
+                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Packages = allPackageViewModels });
                 }
                 else
                 {
@@ -45,6 +48,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [HttpGet]
         public async Task<ActionResult> GetById(int packageId)
         {
             try
@@ -52,8 +56,8 @@ namespace Breakdown.API.Controllers.v1
                 IEnumerable<Package> requestedPackage = await _packageRepository.Retrieve(packageId);
                 if (requestedPackage.Count() > 0)
                 {
-                    PackageDto requestedPackageDto = _autoMapper.Map<PackageDto>(requestedPackage.SingleOrDefault());
-                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Package = requestedPackageDto });
+                    PackageViewModel requestedPackageViewModel = _autoMapper.Map<PackageViewModel>(requestedPackage.SingleOrDefault());
+                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Package = requestedPackageViewModel });
                 }
                 else
                 {
@@ -67,7 +71,7 @@ namespace Breakdown.API.Controllers.v1
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create([FromBody]PackageDto packageToCreate)
+        public async Task<ActionResult> Create(PackageViewModel packageToCreate)
         {
             try
             {
@@ -96,7 +100,7 @@ namespace Breakdown.API.Controllers.v1
         }
 
         [HttpPut]
-        public async Task<ActionResult> Update([FromBody]PackageDto packageToUpdate)
+        public async Task<ActionResult> Update(PackageViewModel packageToUpdate)
         {
             try
             {
