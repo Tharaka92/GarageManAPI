@@ -1,8 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Breakdown.Contracts.DTOs
+namespace Breakdown.API.ViewModels
 {
-    public class LoginDto
+    public class LoginViewModel
     {
         public int UserId { get; set; }
 

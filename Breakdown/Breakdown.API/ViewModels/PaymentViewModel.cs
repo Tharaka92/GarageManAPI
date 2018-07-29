@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Breakdown.Contracts.DTOs
+namespace Breakdown.API.ViewModels
 {
-    public class PaymentDto
+    public class PaymentViewModel
     {
         public string Nonce { get; set; }
         public decimal Amount { get; set; }

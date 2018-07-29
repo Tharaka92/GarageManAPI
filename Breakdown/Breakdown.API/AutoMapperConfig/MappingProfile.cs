@@ -15,7 +15,7 @@ namespace Breakdown.API.AutoMapperConfig
         {
             CreateMap<Service, ServiceViewModel>().ReverseMap();
             CreateMap<Package, PackageViewModel>().ReverseMap();
-            CreateMap<Vehicle, VehicleDto>().ReverseMap();
+            CreateMap<Vehicle, VehicleViewModel>().ReverseMap();
         }
     }
 }

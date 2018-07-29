@@ -11,6 +11,7 @@ using Breakdown.API.TokenUtilities;
 using Breakdown.Domain.Entities;
 using System.Net;
 using System.Net.Http;
+using Breakdown.API.ViewModels;
 
 namespace Breakdown.API.Controllers.v1
 {
@@ -40,29 +41,29 @@ namespace Breakdown.API.Controllers.v1
         /// <summary>
         /// Login a user to the platform
         /// </summary>
-        /// <param name="loginModel"></param>
+        /// <param name="loginViewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginDto loginModel)
+        public async Task<IActionResult> Login([FromBody] LoginViewModel loginViewModel)
         {
             try
             {
-                var result = await _signInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, false, false);
+                var result = await _signInManager.PasswordSignInAsync(loginViewModel.Email, loginViewModel.Password, false, false);
 
                 if (result.Succeeded)
                 {
-                    var appUser = await _userManager.FindByEmailAsync(loginModel.Email);
+                    var appUser = await _userManager.FindByEmailAsync(loginViewModel.Email);
                     var roles = await _userManager.GetRolesAsync(appUser);
 
-                    loginModel.UserId = appUser.Id;
-                    loginModel.Name = appUser.Name;
-                    loginModel.Email = appUser.Email;
-                    loginModel.Country = appUser.Country;
-                    loginModel.PhoneNumber = appUser.PhoneNumber;
-                    loginModel.Token = TokenFactory.GenerateJwtToken(loginModel.Email, appUser, _configuration);
-                    loginModel.RoleName = roles.FirstOrDefault();
+                    loginViewModel.UserId = appUser.Id;
+                    loginViewModel.Name = appUser.Name;
+                    loginViewModel.Email = appUser.Email;
+                    loginViewModel.Country = appUser.Country;
+                    loginViewModel.PhoneNumber = appUser.PhoneNumber;
+                    loginViewModel.Token = TokenFactory.GenerateJwtToken(loginViewModel.Email, appUser, _configuration);
+                    loginViewModel.RoleName = roles.FirstOrDefault();
 
-                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, AuthData = loginModel });
+                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, AuthData = loginViewModel });
                 }
                 else
                 {
@@ -78,10 +79,10 @@ namespace Breakdown.API.Controllers.v1
         /// <summary>
         /// Register a new user to the platform
         /// </summary>
-        /// <param name="registerModel"></param>
+        /// <param name="registerViewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] RegisterDto registerModel)
+        public async Task<IActionResult> Register([FromBody] RegisterViewModel registerViewModel)
         {
             try
             {
@@ -90,35 +91,35 @@ namespace Breakdown.API.Controllers.v1
                     return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = ModelState.IsValid, Errors = ModelState });
                 }
 
-                if (!await _roleManager.RoleExistsAsync(registerModel.RoleName))
+                if (!await _roleManager.RoleExistsAsync(registerViewModel.RoleName))
                 {
-                    await _roleManager.CreateAsync(new IdentityRole<int>() { Name = registerModel.RoleName });
+                    await _roleManager.CreateAsync(new IdentityRole<int>() { Name = registerViewModel.RoleName });
                 }
 
                 var user = new ApplicationUser
                 {
-                    Name = registerModel.Name,
-                    Country = registerModel.Country,
-                    PhoneNumber = registerModel.PhoneNumber,
-                    UserName = registerModel.Email,
-                    Email = registerModel.Email
+                    Name = registerViewModel.Name,
+                    Country = registerViewModel.Country,
+                    PhoneNumber = registerViewModel.PhoneNumber,
+                    UserName = registerViewModel.Email,
+                    Email = registerViewModel.Email
                 };
 
-                var result = await _userManager.CreateAsync(user, registerModel.Password);
+                var result = await _userManager.CreateAsync(user, registerViewModel.Password);
 
                 if (result.Succeeded)
                 {
-                    if (!await _userManager.IsInRoleAsync(user, registerModel.RoleName))
+                    if (!await _userManager.IsInRoleAsync(user, registerViewModel.RoleName))
                     {
-                        await _userManager.AddToRoleAsync(user, registerModel.RoleName);
+                        await _userManager.AddToRoleAsync(user, registerViewModel.RoleName);
                     }
 
                     await _signInManager.SignInAsync(user, false);
 
-                    registerModel.UserId = user.Id;
-                    registerModel.Token = TokenFactory.GenerateJwtToken(registerModel.Email, user, _configuration);
+                    registerViewModel.UserId = user.Id;
+                    registerViewModel.Token = TokenFactory.GenerateJwtToken(registerViewModel.Email, user, _configuration);
 
-                    return Created("", new { IsSucceeded = result.Succeeded, AuthData = registerModel }); 
+                    return Created("", new { IsSucceeded = result.Succeeded, AuthData = registerViewModel }); 
                 }
                 else
                 {

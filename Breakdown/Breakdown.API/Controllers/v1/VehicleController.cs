@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Breakdown.API.ViewModels;
 using Breakdown.Contracts.DTOs;
 using Breakdown.Contracts.Interfaces;
 using Breakdown.Domain.Entities;
@@ -33,8 +34,8 @@ namespace Breakdown.API.Controllers.v1
                 IEnumerable<Vehicle> allVehicles = await _vehicleRepository.Retrieve(null, null);
                 if (allVehicles.Count() > 0)
                 {
-                    IEnumerable<VehicleDto> allVehicleDtos = _autoMapper.Map<IEnumerable<VehicleDto>>(allVehicles);
-                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Vehicles = allVehicleDtos });
+                    IEnumerable<VehicleViewModel> allVehicleViewModels = _autoMapper.Map<IEnumerable<VehicleViewModel>>(allVehicles);
+                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Vehicles = allVehicleViewModels });
                 }
                 else
                 {
@@ -55,8 +56,8 @@ namespace Breakdown.API.Controllers.v1
                 IEnumerable<Vehicle> requestedVehicle = await _vehicleRepository.Retrieve(vehicleId, null);
                 if (requestedVehicle.Count() > 0)
                 {
-                    VehicleDto requestedVehicleDto = _autoMapper.Map<VehicleDto>(requestedVehicle.SingleOrDefault());
-                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Vehicle = requestedVehicleDto });
+                    VehicleViewModel requestedVehicleViewModel = _autoMapper.Map<VehicleViewModel>(requestedVehicle.SingleOrDefault());
+                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Vehicle = requestedVehicleViewModel });
                 }
                 else
                 {
@@ -77,8 +78,8 @@ namespace Breakdown.API.Controllers.v1
                 IEnumerable<Vehicle> requestedVehicle = await _vehicleRepository.Retrieve(null, userId);
                 if (requestedVehicle.Count() > 0)
                 {
-                    IEnumerable<VehicleDto> requestedVehiclesDto = _autoMapper.Map<IEnumerable<VehicleDto>>(requestedVehicle);
-                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Vehicles = requestedVehiclesDto });
+                    IEnumerable<VehicleViewModel> requestedVehiclesViewModel = _autoMapper.Map<IEnumerable<VehicleViewModel>>(requestedVehicle);
+                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Vehicles = requestedVehiclesViewModel });
                 }
                 else
                 {
@@ -92,7 +93,7 @@ namespace Breakdown.API.Controllers.v1
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(VehicleDto vehicleToCreate)
+        public async Task<ActionResult> Create(VehicleViewModel vehicleToCreate)
         {
             try
             {
@@ -121,7 +122,7 @@ namespace Breakdown.API.Controllers.v1
         }
 
         [HttpPut]
-        public async Task<ActionResult> Update(VehicleDto vehicleToUpdate)
+        public async Task<ActionResult> Update(VehicleViewModel vehicleToUpdate)
         {
             try
             {

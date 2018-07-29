@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Breakdown.Contracts.DTOs
+namespace Breakdown.API.ViewModels
 {
-    public class VehicleDto
+    public class VehicleViewModel
     {
         public int VehicleId { get; set; }
         public string UserId { get; set; }

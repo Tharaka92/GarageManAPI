@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Breakdown.API.ViewModels;
 using Breakdown.Contracts.Braintree;
 using Breakdown.Contracts.DTOs;
 using Microsoft.AspNetCore.Http;
@@ -35,11 +36,11 @@ namespace Breakdown.API.Controllers.v1
         }
 
         [HttpPost]
-        public async Task<IActionResult> Checkout(PaymentDto paymentModel)
+        public async Task<IActionResult> Checkout(PaymentViewModel paymentViewModel)
         {
             try
             {
-                return StatusCode(StatusCodes.Status200OK, await _braintreeConfig.CreateSale(paymentModel.Nonce, paymentModel.Amount));
+                return StatusCode(StatusCodes.Status200OK, await _braintreeConfig.CreateSale(paymentViewModel.Nonce, paymentViewModel.Amount));
             }
             catch (Exception ex)
             {
