@@ -10,6 +10,8 @@ namespace Breakdown.API.ViewModels
     {
         public int UserId { get; set; }
 
+        public int? ServiceId { get; set; }
+
         [Required]
         [EmailAddress]
         public string Email { get; set; }

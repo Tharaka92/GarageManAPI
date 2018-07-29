@@ -56,6 +56,7 @@ namespace Breakdown.API.Controllers.v1
                     var roles = await _userManager.GetRolesAsync(appUser);
 
                     loginViewModel.UserId = appUser.Id;
+                    loginViewModel.ServiceId = appUser.ServiceId;
                     loginViewModel.Name = appUser.Name;
                     loginViewModel.Email = appUser.Email;
                     loginViewModel.Country = appUser.Country;
@@ -117,6 +118,7 @@ namespace Breakdown.API.Controllers.v1
                     await _signInManager.SignInAsync(user, false);
 
                     registerViewModel.UserId = user.Id;
+                    registerViewModel.ServiceId = user.ServiceId;
                     registerViewModel.Token = TokenFactory.GenerateJwtToken(registerViewModel.Email, user, _configuration);
 
                     return Created("", new { IsSucceeded = result.Succeeded, AuthData = registerViewModel }); 
