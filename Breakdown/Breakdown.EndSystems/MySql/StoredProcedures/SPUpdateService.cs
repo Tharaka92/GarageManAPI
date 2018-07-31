@@ -8,5 +8,6 @@ namespace Breakdown.EndSystems.MySql.StoredProcedures
     {
         public int ServiceId { get; set; }
         public string ServiceName { get; set; }
+        public string UniqueCode { get; set; }
     }
 }

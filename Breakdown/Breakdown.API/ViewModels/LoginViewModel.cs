@@ -28,5 +28,9 @@ namespace Breakdown.API.ViewModels
         public string Token { get; set; }
 
         public string RoleName { get; set; }
+
+        public string ServiceName { get; set; }
+
+        public string UniqueCode { get; set; }
     }
 }

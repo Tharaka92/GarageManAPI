@@ -28,7 +28,8 @@ namespace Breakdown.EndSystems.MySql.Repositories
             {
                 SPInsertService parameters = new SPInsertService()
                 {
-                    ServiceName = serviceToCreate.ServiceName
+                    ServiceName = serviceToCreate.ServiceName,
+                    UniqueCode = serviceToCreate.UniqueCode
                 };
 
                 using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))
@@ -92,7 +93,8 @@ namespace Breakdown.EndSystems.MySql.Repositories
                 SPUpdateService parameters = new SPUpdateService()
                 {
                     ServiceId = serviceToUpdate.ServiceId,
-                    ServiceName = serviceToUpdate.ServiceName
+                    ServiceName = serviceToUpdate.ServiceName,
+                    UniqueCode = serviceToUpdate.UniqueCode
                 };
 
                 using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))

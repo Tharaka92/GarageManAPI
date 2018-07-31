@@ -30,5 +30,9 @@ namespace Breakdown.API.ViewModels
 
         [Required]
         public string RoleName { get; set; }
+
+        public string ServiceName { get; set; }
+
+        public string UniqueCode { get; set; }
     }
 }

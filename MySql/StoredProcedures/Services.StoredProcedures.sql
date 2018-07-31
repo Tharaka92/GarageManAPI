@@ -9,6 +9,7 @@ BEGIN
  SELECT 
 	Services.ServiceId,
 	Services.ServiceName,
+	Services.UniqueCode,
 	Services.IsDeleted
  FROM Services
  WHERE 
@@ -23,9 +24,10 @@ DELIMITER $$
 
 DELIMITER $$
 CREATE PROCEDURE `SPInsertService`(
-ServiceName varchar(100))
+ServiceName varchar(100),
+UniqueCode varchar(5))
 BEGIN
- INSERT INTO Services (ServiceName) VALUES (ServiceName);
+ INSERT INTO Services (ServiceName, UniqueCode) VALUES (ServiceName, UniqueCode);
 END$$
 DELIMITER $$
 
@@ -36,10 +38,12 @@ DELIMITER $$
 DELIMITER $$
 CREATE PROCEDURE `SPUpdateService`(
 ServiceId  int,
-ServiceName varchar(100))
+ServiceName varchar(100),
+UniqueCode varchar(5))
 BEGIN
  UPDATE Services SET 
-	Services.ServiceName = ServiceName
+	Services.ServiceName = ServiceName,
+	Services.UniqueCode = UniqueCode
  WHERE Services.ServiceId = ServiceId; 
 END$$
 DELIMITER $$

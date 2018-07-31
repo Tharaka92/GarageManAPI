@@ -12,6 +12,7 @@ using Breakdown.Domain.Entities;
 using System.Net;
 using System.Net.Http;
 using Breakdown.API.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Breakdown.API.Controllers.v1
 {
@@ -52,7 +53,8 @@ namespace Breakdown.API.Controllers.v1
 
                 if (result.Succeeded)
                 {
-                    var appUser = await _userManager.FindByEmailAsync(loginViewModel.Email);
+                    //var appUser = await _userManager.FindByEmailAsync(loginViewModel.Email);
+                    var appUser = await _userManager.Users.Include(u => u.Service).SingleAsync(u => u.Email == loginViewModel.Email);   
                     var roles = await _userManager.GetRolesAsync(appUser);
 
                     loginViewModel.UserId = appUser.Id;
@@ -63,6 +65,8 @@ namespace Breakdown.API.Controllers.v1
                     loginViewModel.PhoneNumber = appUser.PhoneNumber;
                     loginViewModel.Token = TokenFactory.GenerateJwtToken(loginViewModel.Email, appUser, _configuration);
                     loginViewModel.RoleName = roles.FirstOrDefault();
+                    loginViewModel.ServiceName = appUser.Service.ServiceName;
+                    loginViewModel.UniqueCode = appUser.Service.UniqueCode;
 
                     return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, AuthData = loginViewModel });
                 }
@@ -103,7 +107,8 @@ namespace Breakdown.API.Controllers.v1
                     Country = registerViewModel.Country,
                     PhoneNumber = registerViewModel.PhoneNumber,
                     UserName = registerViewModel.Email,
-                    Email = registerViewModel.Email
+                    Email = registerViewModel.Email,
+                    ServiceId = registerViewModel.ServiceId
                 };
 
                 var result = await _userManager.CreateAsync(user, registerViewModel.Password);
@@ -117,9 +122,13 @@ namespace Breakdown.API.Controllers.v1
 
                     await _signInManager.SignInAsync(user, false);
 
+                    var appUser = await _userManager.Users.Include(u => u.Service).SingleAsync(u => u.Email == registerViewModel.Email);
+
                     registerViewModel.UserId = user.Id;
                     registerViewModel.ServiceId = user.ServiceId;
                     registerViewModel.Token = TokenFactory.GenerateJwtToken(registerViewModel.Email, user, _configuration);
+                    registerViewModel.ServiceName = appUser.Service.ServiceName;
+                    registerViewModel.UniqueCode = appUser.Service.UniqueCode;
 
                     return Created("", new { IsSucceeded = result.Succeeded, AuthData = registerViewModel }); 
                 }
