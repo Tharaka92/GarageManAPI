@@ -57,7 +57,7 @@ namespace Breakdown.API.Controllers.v1
                 if (requestedService.Count() > 0)
                 {
                     ServiceViewModel requestedServiceViewModel = _autoMapper.Map<ServiceViewModel>(requestedService.SingleOrDefault());
-                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Package = requestedServiceViewModel });
+                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Service = requestedServiceViewModel });
                 }
                 else
                 {

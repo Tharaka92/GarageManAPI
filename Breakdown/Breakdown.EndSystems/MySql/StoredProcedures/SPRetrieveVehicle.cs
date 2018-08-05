@@ -7,6 +7,6 @@ namespace Breakdown.EndSystems.MySql.StoredProcedures
     public class SPRetrieveVehicle : SP
     {
         public int? VehicleId { get; set; }
-        public string UserId { get; set; }
+        public int? UserId { get; set; }
     }
 }

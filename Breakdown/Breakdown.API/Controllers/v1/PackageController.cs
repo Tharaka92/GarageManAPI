@@ -31,7 +31,7 @@ namespace Breakdown.API.Controllers.v1
         {
             try
             {
-                IEnumerable<Package> allPackages = await _packageRepository.Retrieve(null);
+                IEnumerable<Package> allPackages = await _packageRepository.Retrieve(null, null);
                 if (allPackages.Count() > 0)
                 {
                     IEnumerable<PackageViewModel> allPackageViewModels = _autoMapper.Map<IEnumerable<PackageViewModel>>(allPackages);
@@ -44,7 +44,7 @@ namespace Breakdown.API.Controllers.v1
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error Occured." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false, Message = "Internal Server Error Occured." });
             }
         }
 
@@ -53,7 +53,7 @@ namespace Breakdown.API.Controllers.v1
         {
             try
             {
-                IEnumerable<Package> requestedPackage = await _packageRepository.Retrieve(packageId);
+                IEnumerable<Package> requestedPackage = await _packageRepository.Retrieve(packageId, null);
                 if (requestedPackage.Count() > 0)
                 {
                     PackageViewModel requestedPackageViewModel = _autoMapper.Map<PackageViewModel>(requestedPackage.SingleOrDefault());
@@ -66,7 +66,29 @@ namespace Breakdown.API.Controllers.v1
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error Occured." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false, Message = "Internal Server Error Occured." });
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetByServiceId(int serviceId)
+        {
+            try
+            {
+                IEnumerable<Package> requestedPackage = await _packageRepository.Retrieve(null, serviceId);
+                if (requestedPackage.Count() > 0)
+                {
+                    IEnumerable<PackageViewModel> requestedPackageViewModels = _autoMapper.Map<IEnumerable<PackageViewModel>>(requestedPackage);
+                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Packages = requestedPackageViewModels });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status204NoContent);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false, Message = "Internal Server Error Occured." });
             }
         }
 
@@ -81,21 +103,21 @@ namespace Breakdown.API.Controllers.v1
                     int affectedRows = await _packageRepository.Create(packageEntityToCreate);
                     if (affectedRows == 1)
                     {
-                        return StatusCode(StatusCodes.Status201Created);
+                        return StatusCode(StatusCodes.Status201Created, new { IsSucceeded = true });
                     }
                     else
                     {
-                        return StatusCode(StatusCodes.Status417ExpectationFailed);
+                        return StatusCode(StatusCodes.Status417ExpectationFailed, new { IsSucceeded = false });
                     }
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false });
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error Occured." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false, Message = "Internal Server Error Occured." });
             }
         }
 
@@ -110,21 +132,21 @@ namespace Breakdown.API.Controllers.v1
                     int affectedRows = await _packageRepository.Update(packageEntityToUpdate);
                     if (affectedRows == 1)
                     {
-                        return StatusCode(StatusCodes.Status200OK);
+                        return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true });
                     }
                     else
                     {
-                        return StatusCode(StatusCodes.Status417ExpectationFailed);
+                        return StatusCode(StatusCodes.Status417ExpectationFailed, new { IsSucceeded = false });
                     }
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false });
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error Occured." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false, Message = "Internal Server Error Occured." });
             }
         }
 
@@ -136,16 +158,16 @@ namespace Breakdown.API.Controllers.v1
                 int affectedRows = await _packageRepository.Delete(packageId);
                 if (affectedRows == 1)
                 {
-                    return StatusCode(StatusCodes.Status200OK);
+                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true });
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status417ExpectationFailed);
+                    return StatusCode(StatusCodes.Status417ExpectationFailed, new { IsSucceeded = false });
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error Occured." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false, Message = "Internal Server Error Occured." });
             }
         }
     }

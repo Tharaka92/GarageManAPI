@@ -4,7 +4,8 @@
 
 DELIMITER $$
 CREATE PROCEDURE `SPRetrievePackage`(
-PackageId  int)
+PackageId  int,
+ServiceId int)
 BEGIN
  SELECT 
 	Packages.PackageId,
@@ -16,6 +17,7 @@ BEGIN
  FROM Packages
  WHERE 
 	(1 = CASE WHEN PackageId IS NULL THEN 1 WHEN Packages.PackageId = PackageId THEN 1 ELSE 0 END) AND
+	(1 = CASE WHEN ServiceId IS NULL THEN 1 WHEN Packages.ServiceId = ServiceId THEN 1 ELSE 0 END) AND
     Packages.IsDeleted = 0;
 END$$
 DELIMITER $$

@@ -4,7 +4,8 @@
 
 DELIMITER $$
 CREATE PROCEDURE `SPRetrieveVehicle`(
-VehicleId  int)
+VehicleId  int,
+UserId int)
 BEGIN
  SELECT 
 	Vehicles.VehicleId,

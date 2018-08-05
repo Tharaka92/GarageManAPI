@@ -70,14 +70,14 @@ namespace Breakdown.EndSystems.MySql.Repositories
             }
         }
 
-        public async Task<IEnumerable<Vehicle>> Retrieve(int? vehicleId, string userId)
+        public async Task<IEnumerable<Vehicle>> Retrieve(int? vehicleId, int? userId)
         {
             try
             {
                 SPRetrieveVehicle parameters = new SPRetrieveVehicle
                 {
                     VehicleId = vehicleId.HasValue ? vehicleId : null,
-                    UserId = String.IsNullOrEmpty(userId) ? null : userId
+                    UserId = userId.HasValue ? userId : null
                 };
 
                 using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))

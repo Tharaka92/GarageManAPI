@@ -44,7 +44,7 @@ namespace Breakdown.API.Controllers.v1
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error Occured." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false, Message = "Internal Server Error Occured." });
             }
         }
 
@@ -66,12 +66,12 @@ namespace Breakdown.API.Controllers.v1
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error Occured." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false, Message = "Internal Server Error Occured." });
             }
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetByUserId(string userId)
+        public async Task<ActionResult> GetByUserId(int userId)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace Breakdown.API.Controllers.v1
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error Occured." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false, Message = "Internal Server Error Occured." });
             }
         }
 
@@ -103,21 +103,21 @@ namespace Breakdown.API.Controllers.v1
                     int affectedRows = await _vehicleRepository.Create(vehicleEntityToCreate);
                     if (affectedRows == 1)
                     {
-                        return StatusCode(StatusCodes.Status201Created);
+                        return StatusCode(StatusCodes.Status201Created, new { IsSucceeded = true });
                     }
                     else
                     {
-                        return StatusCode(StatusCodes.Status417ExpectationFailed);
+                        return StatusCode(StatusCodes.Status417ExpectationFailed, new { IsSucceeded = false });
                     }
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false });
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error Occured." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false, Message = "Internal Server Error Occured." });
             }
         }
 
@@ -132,21 +132,21 @@ namespace Breakdown.API.Controllers.v1
                     int affectedRows = await _vehicleRepository.Update(vehicleEntityToUpdate);
                     if (affectedRows == 1)
                     {
-                        return StatusCode(StatusCodes.Status200OK);
+                        return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true });
                     }
                     else
                     {
-                        return StatusCode(StatusCodes.Status417ExpectationFailed);
+                        return StatusCode(StatusCodes.Status417ExpectationFailed, new { IsSucceeded = false });
                     }
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false });
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error Occured." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false, Message = "Internal Server Error Occured." });
             }
         }
 
@@ -158,16 +158,16 @@ namespace Breakdown.API.Controllers.v1
                 int affectedRows = await _vehicleRepository.Delete(vehicleId);
                 if (affectedRows == 1)
                 {
-                    return StatusCode(StatusCodes.Status200OK);
+                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true });
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status417ExpectationFailed);
+                    return StatusCode(StatusCodes.Status417ExpectationFailed, new { IsSucceeded = false });
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error Occured." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false, Message = "Internal Server Error Occured." });
             }
         }
     }

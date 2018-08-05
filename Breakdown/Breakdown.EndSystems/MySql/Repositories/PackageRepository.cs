@@ -68,13 +68,14 @@ namespace Breakdown.EndSystems.MySql.Repositories
             }
         }
 
-        public async Task<IEnumerable<Package>> Retrieve(int? packageId)
+        public async Task<IEnumerable<Package>> Retrieve(int? packageId, int? serviceId)
         {
             try
             {
                 SPRetrievePackage parameters = new SPRetrievePackage
                 {
-                    PackageId = packageId.HasValue ? packageId : null
+                    PackageId = packageId.HasValue ? packageId : null,
+                    ServiceId = serviceId.HasValue ? serviceId : null
                 };
 
                 using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))
