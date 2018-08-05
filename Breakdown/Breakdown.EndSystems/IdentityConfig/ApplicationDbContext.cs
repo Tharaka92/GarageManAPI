@@ -37,5 +37,6 @@ namespace Breakdown.EndSystems.IdentityConfig
         public DbSet<Package> Packages { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<Service> Services { get; set; }
+        public DbSet<ServiceRequest> ServiceRequests { get; set; }
     }
 }
