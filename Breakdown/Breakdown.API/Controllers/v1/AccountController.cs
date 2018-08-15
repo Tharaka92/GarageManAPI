@@ -39,11 +39,6 @@ namespace Breakdown.API.Controllers.v1
             _configuration = configuration;
         }
 
-        /// <summary>
-        /// Login a user to the platform
-        /// </summary>
-        /// <param name="loginViewModel"></param>
-        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginViewModel loginViewModel)
         {
@@ -54,7 +49,7 @@ namespace Breakdown.API.Controllers.v1
                 if (result.Succeeded)
                 {
                     //var appUser = await _userManager.FindByEmailAsync(loginViewModel.Email);
-                    var appUser = await _userManager.Users.Include(u => u.Service).SingleAsync(u => u.Email == loginViewModel.Email);   
+                    var appUser = await _userManager.Users.Include(u => u.Service).SingleAsync(u => u.Email == loginViewModel.Email);
                     var roles = await _userManager.GetRolesAsync(appUser);
 
                     loginViewModel.UserId = appUser.Id;
@@ -65,8 +60,12 @@ namespace Breakdown.API.Controllers.v1
                     loginViewModel.PhoneNumber = appUser.PhoneNumber;
                     loginViewModel.Token = TokenFactory.GenerateJwtToken(loginViewModel.Email, appUser, _configuration);
                     loginViewModel.RoleName = roles.FirstOrDefault();
-                    loginViewModel.ServiceName = appUser.Service.ServiceName;
-                    loginViewModel.UniqueCode = appUser.Service.UniqueCode;
+                    loginViewModel.Password = string.Empty;
+                    if (appUser.Service != null)
+                    {
+                        loginViewModel.ServiceName = appUser.Service.ServiceName;
+                        loginViewModel.UniqueCode = appUser.Service.UniqueCode;
+                    }
 
                     return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, AuthData = loginViewModel });
                 }
@@ -77,15 +76,10 @@ namespace Breakdown.API.Controllers.v1
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
-            }            
+                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false });
+            }
         }
 
-        /// <summary>
-        /// Register a new user to the platform
-        /// </summary>
-        /// <param name="registerViewModel"></param>
-        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel registerViewModel)
         {
@@ -127,19 +121,23 @@ namespace Breakdown.API.Controllers.v1
                     registerViewModel.UserId = user.Id;
                     registerViewModel.ServiceId = user.ServiceId;
                     registerViewModel.Token = TokenFactory.GenerateJwtToken(registerViewModel.Email, user, _configuration);
-                    registerViewModel.ServiceName = appUser.Service.ServiceName;
-                    registerViewModel.UniqueCode = appUser.Service.UniqueCode;
+                    registerViewModel.Password = string.Empty;
+                    if (appUser.Service != null)
+                    {
+                        registerViewModel.ServiceName = appUser.Service.ServiceName;
+                        registerViewModel.UniqueCode = appUser.Service.UniqueCode;
+                    }
 
-                    return Created("", new { IsSucceeded = result.Succeeded, AuthData = registerViewModel }); 
+                    return Created("", new { IsSucceeded = result.Succeeded, AuthData = registerViewModel });
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, Error = result.Errors  });
+                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, Error = result.Errors });
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false });
             }
         }
     }
