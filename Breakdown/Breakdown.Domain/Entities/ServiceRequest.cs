@@ -17,8 +17,6 @@ namespace Breakdown.Domain.Entities
 
         public int PackageId { get; set; }
 
-        public int VehicleId { get; set; }
-
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }
@@ -30,8 +28,5 @@ namespace Breakdown.Domain.Entities
 
         [ForeignKey("PackageId")]
         public Package Package { get; set; }
-
-        [ForeignKey("VehicleId")]
-        public Vehicle Vehicle { get; set; }
     }
 }

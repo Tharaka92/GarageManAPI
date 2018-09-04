@@ -49,7 +49,6 @@ namespace Breakdown.API
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
             services.AddTransient<IBraintreeConfiguration, BraintreeConfiguration>();
             services.AddTransient<IPackageRepository, PackageRepository>();
-            services.AddTransient<IVehicleRepository, VehicleRepository>();
             services.AddTransient<IServiceRepository, ServiceRepository>();
 
             // ===== Add Jwt Authentication ========

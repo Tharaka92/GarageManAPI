@@ -3,14 +3,16 @@ using System;
 using Breakdown.EndSystems.IdentityConfig;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Breakdown.EndSystems.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180904123723_VehicleEntityRemoved")]
+    partial class VehicleEntityRemoved
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,13 +93,9 @@ namespace Breakdown.EndSystems.Migrations
 
                     b.Property<int?>("ServiceId");
 
-                    b.Property<int?>("VehicleTypeId");
-
                     b.HasKey("PackageId");
 
                     b.HasIndex("ServiceId");
-
-                    b.HasIndex("VehicleTypeId");
 
                     b.ToTable("Packages");
                 });
@@ -145,24 +143,6 @@ namespace Breakdown.EndSystems.Migrations
                     b.HasIndex("ServiceId");
 
                     b.ToTable("ServiceRequests");
-                });
-
-            modelBuilder.Entity("Breakdown.Domain.Entities.VehicleType", b =>
-                {
-                    b.Property<int>("VehicleTypeId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(300);
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(100);
-
-                    b.HasKey("VehicleTypeId");
-
-                    b.ToTable("VehicleTypes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
@@ -281,10 +261,6 @@ namespace Breakdown.EndSystems.Migrations
                     b.HasOne("Breakdown.Domain.Entities.Service", "Service")
                         .WithMany("Packages")
                         .HasForeignKey("ServiceId");
-
-                    b.HasOne("Breakdown.Domain.Entities.VehicleType", "VehicleType")
-                        .WithMany()
-                        .HasForeignKey("VehicleTypeId");
                 });
 
             modelBuilder.Entity("Breakdown.Domain.Entities.ServiceRequest", b =>
