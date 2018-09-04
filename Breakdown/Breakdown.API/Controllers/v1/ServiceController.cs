@@ -31,7 +31,7 @@ namespace Breakdown.API.Controllers.v1
         {
             try
             {
-                IEnumerable<Service> allServices = await _serviceRepository.Retrieve(null);
+                IEnumerable<Service> allServices = await _serviceRepository.RetrieveAsync(null);
                 if (allServices.Count() > 0)
                 {
                     IEnumerable<ServiceViewModel> allServiceViewModels = _autoMapper.Map<IEnumerable<ServiceViewModel>>(allServices);
@@ -53,7 +53,7 @@ namespace Breakdown.API.Controllers.v1
         {
             try
             {
-                IEnumerable<Service> requestedService = await _serviceRepository.Retrieve(serviceId);
+                IEnumerable<Service> requestedService = await _serviceRepository.RetrieveAsync(serviceId);
                 if (requestedService.Count() > 0)
                 {
                     ServiceViewModel requestedServiceViewModel = _autoMapper.Map<ServiceViewModel>(requestedService.SingleOrDefault());
@@ -78,7 +78,7 @@ namespace Breakdown.API.Controllers.v1
                 if (serviceToCreate != null)
                 {
                     Service serviceEntityToCreate = _autoMapper.Map<Service>(serviceToCreate);
-                    int affectedRows = await _serviceRepository.Create(serviceEntityToCreate);
+                    int affectedRows = await _serviceRepository.CreateAsync(serviceEntityToCreate);
                     if (affectedRows == 1)
                     {
                         return StatusCode(StatusCodes.Status201Created);
@@ -107,7 +107,7 @@ namespace Breakdown.API.Controllers.v1
                 if (serviceToUpdate != null)
                 {
                     Service serviceEntityToUpdate = _autoMapper.Map<Service>(serviceToUpdate);
-                    int affectedRows = await _serviceRepository.Update(serviceEntityToUpdate);
+                    int affectedRows = await _serviceRepository.UpdateAsync(serviceEntityToUpdate);
                     if (affectedRows == 1)
                     {
                         return StatusCode(StatusCodes.Status200OK);
@@ -133,7 +133,7 @@ namespace Breakdown.API.Controllers.v1
         {
             try
             {
-                int affectedRows = await _serviceRepository.Delete(serviceId);
+                int affectedRows = await _serviceRepository.DeleteAsync(serviceId);
                 if (affectedRows == 1)
                 {
                     return StatusCode(StatusCodes.Status200OK);

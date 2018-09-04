@@ -8,9 +8,9 @@ namespace Breakdown.Contracts.Interfaces
 {
     public interface IPackageRepository
     {
-        Task<int> Create(Package packageToCreate);
-        Task<IEnumerable<Package>> Retrieve(int? packageId, int? serviceId);
-        Task<int> Update(Package packageToUpdate);
-        Task<int> Delete(int packageId);
+        Task<int> CreateAsync(Package packageToCreate);
+        Task<IEnumerable<Package>> RetrieveAsync(int? packageId, int? serviceId);
+        Task<int> UpdateAsync(Package packageToUpdate);
+        Task<int> DeleteAsync(int packageId);
     }
 }

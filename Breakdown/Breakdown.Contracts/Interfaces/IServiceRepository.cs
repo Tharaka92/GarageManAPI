@@ -8,9 +8,9 @@ namespace Breakdown.Contracts.Interfaces
 {
     public interface IServiceRepository
     {
-        Task<int> Create(Service serviceToCreate);
-        Task<IEnumerable<Service>> Retrieve(int? serviceId);
-        Task<int> Update(Service serviceToUpdate);
-        Task<int> Delete(int serviceId);
+        Task<int> CreateAsync(Service serviceToCreate);
+        Task<IEnumerable<Service>> RetrieveAsync(int? serviceId);
+        Task<int> UpdateAsync(Service serviceToUpdate);
+        Task<int> DeleteAsync(int serviceId);
     }
 }

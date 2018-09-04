@@ -31,7 +31,7 @@ namespace Breakdown.API.Controllers.v1
         {
             try
             {
-                IEnumerable<Package> allPackages = await _packageRepository.Retrieve(null, null);
+                IEnumerable<Package> allPackages = await _packageRepository.RetrieveAsync(null, null);
                 if (allPackages.Count() > 0)
                 {
                     IEnumerable<PackageViewModel> allPackageViewModels = _autoMapper.Map<IEnumerable<PackageViewModel>>(allPackages);
@@ -53,7 +53,7 @@ namespace Breakdown.API.Controllers.v1
         {
             try
             {
-                IEnumerable<Package> requestedPackage = await _packageRepository.Retrieve(packageId, null);
+                IEnumerable<Package> requestedPackage = await _packageRepository.RetrieveAsync(packageId, null);
                 if (requestedPackage.Count() > 0)
                 {
                     PackageViewModel requestedPackageViewModel = _autoMapper.Map<PackageViewModel>(requestedPackage.SingleOrDefault());
@@ -75,7 +75,7 @@ namespace Breakdown.API.Controllers.v1
         {
             try
             {
-                IEnumerable<Package> requestedPackage = await _packageRepository.Retrieve(null, serviceId);
+                IEnumerable<Package> requestedPackage = await _packageRepository.RetrieveAsync(null, serviceId);
                 if (requestedPackage.Count() > 0)
                 {
                     IEnumerable<PackageViewModel> requestedPackageViewModels = _autoMapper.Map<IEnumerable<PackageViewModel>>(requestedPackage);
@@ -100,7 +100,7 @@ namespace Breakdown.API.Controllers.v1
                 if (packageToCreate != null)
                 {
                     Package packageEntityToCreate = _autoMapper.Map<Package>(packageToCreate);
-                    int affectedRows = await _packageRepository.Create(packageEntityToCreate);
+                    int affectedRows = await _packageRepository.CreateAsync(packageEntityToCreate);
                     if (affectedRows == 1)
                     {
                         return StatusCode(StatusCodes.Status201Created, new { IsSucceeded = true });
@@ -129,7 +129,7 @@ namespace Breakdown.API.Controllers.v1
                 if (packageToUpdate != null)
                 {
                     Package packageEntityToUpdate = _autoMapper.Map<Package>(packageToUpdate);
-                    int affectedRows = await _packageRepository.Update(packageEntityToUpdate);
+                    int affectedRows = await _packageRepository.UpdateAsync(packageEntityToUpdate);
                     if (affectedRows == 1)
                     {
                         return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true });
@@ -155,7 +155,7 @@ namespace Breakdown.API.Controllers.v1
         {
             try
             {
-                int affectedRows = await _packageRepository.Delete(packageId);
+                int affectedRows = await _packageRepository.DeleteAsync(packageId);
                 if (affectedRows == 1)
                 {
                     return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true });

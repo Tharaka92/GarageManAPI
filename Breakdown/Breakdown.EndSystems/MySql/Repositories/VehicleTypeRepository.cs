@@ -1,10 +1,9 @@
-﻿using Breakdown.Contracts.Interfaces;
-using Breakdown.Contracts.DTOs;
+﻿using Breakdown.Contracts.DTOs;
+using Breakdown.Contracts.Interfaces;
 using Breakdown.Domain.Entities;
 using Breakdown.EndSystems.MySql.StoredProcedures;
 using Dapper;
 using Microsoft.Extensions.Options;
-using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,25 +13,23 @@ using System.Threading.Tasks;
 
 namespace Breakdown.EndSystems.MySql.Repositories
 {
-    public class PackageRepository : IPackageRepository
+    public class VehicleTypeRepository : IVehicleTypeRepository
     {
         private readonly IOptions<ConnectionStringDto> _connectionString;
 
-        public PackageRepository(IOptions<ConnectionStringDto> connectionString)
+        public VehicleTypeRepository(IOptions<ConnectionStringDto> connectionString)
         {
             _connectionString = connectionString;
         }
 
-        public async Task<int> CreateAsync(Package packageToCreate)
+        public async Task<int> CreateAsync(VehicleType vehicleTypeToCreate)
         {
             try
             {
-                SPInsertPackage parameters = new SPInsertPackage()
+                SPInsertVehicleType parameters = new SPInsertVehicleType()
                 {
-                    ServiceId = packageToCreate.ServiceId,
-                    Name = packageToCreate.Name,
-                    Description = packageToCreate.Description,
-                    Price = packageToCreate.Price
+                    Name = vehicleTypeToCreate.Name,
+                    Description = vehicleTypeToCreate.Description,
                 };
 
                 using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))
@@ -47,13 +44,13 @@ namespace Breakdown.EndSystems.MySql.Repositories
             }
         }
 
-        public async Task<int> DeleteAsync(int packageId)
+        public async Task<int> DeleteAsync(int vehicleTypeId)
         {
             try
             {
-                SPDeletePackage parameters = new SPDeletePackage()
+                SPDeleteVehicleType parameters = new SPDeleteVehicleType()
                 {
-                    PackageId = packageId
+                    VehicleTypeId = vehicleTypeId
                 };
 
                 using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))
@@ -68,20 +65,19 @@ namespace Breakdown.EndSystems.MySql.Repositories
             }
         }
 
-        public async Task<IEnumerable<Package>> RetrieveAsync(int? packageId, int? serviceId)
+        public async Task<IEnumerable<VehicleType>> RetrieveAsync(int? vehicleTypeId)
         {
             try
             {
-                SPRetrievePackage parameters = new SPRetrievePackage
+                SPRetrieveVehicleType parameters = new SPRetrieveVehicleType
                 {
-                    PackageId = packageId.HasValue ? packageId : null,
-                    ServiceId = serviceId.HasValue ? serviceId : null
+                    VehicleTypeId = vehicleTypeId.HasValue ? vehicleTypeId : null,
                 };
 
                 using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))
                 {
                     connection.Open();
-                    return await connection.QueryAsync<Package>(sql: parameters.GetName(), param: parameters, commandType: CommandType.StoredProcedure);
+                    return await connection.QueryAsync<VehicleType>(sql: parameters.GetName(), param: parameters, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)
@@ -90,16 +86,15 @@ namespace Breakdown.EndSystems.MySql.Repositories
             }
         }
 
-        public async Task<int> UpdateAsync(Package packageToUpdate)
+        public async Task<int> UpdateAsync(VehicleType vehicleTypeToUpdate)
         {
             try
             {
-                SPUpdatePackage parameters = new SPUpdatePackage()
+                SPUpdateVehicleType parameters = new SPUpdateVehicleType()
                 {
-                    PackageId = packageToUpdate.PackageId,
-                    Name = packageToUpdate.Name,
-                    Description = packageToUpdate.Description,
-                    Price = packageToUpdate.Price
+                    VehicleTypeId = vehicleTypeToUpdate.VehicleTypeId,
+                    Name = vehicleTypeToUpdate.Name,
+                    Description = vehicleTypeToUpdate.Description,
                 };
 
                 using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))

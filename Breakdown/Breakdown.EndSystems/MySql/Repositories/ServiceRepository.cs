@@ -22,7 +22,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
             _connectionString = connectionString;
         }
 
-        public async Task<int> Create(Service serviceToCreate)
+        public async Task<int> CreateAsync(Service serviceToCreate)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
             }
         }
 
-        public async Task<int> Delete(int serviceId)
+        public async Task<int> DeleteAsync(int serviceId)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
             }
         }
 
-        public async Task<IEnumerable<Service>> Retrieve(int? serviceId)
+        public async Task<IEnumerable<Service>> RetrieveAsync(int? serviceId)
         {
             try
             {
@@ -86,7 +86,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
             }
         }
 
-        public async Task<int> Update(Service serviceToUpdate)
+        public async Task<int> UpdateAsync(Service serviceToUpdate)
         {
             try
             {
