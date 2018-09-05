@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Breakdown.API.ViewModels;
+using Breakdown.API.Constants;
+using Breakdown.API.ViewModels.Payment;
 using Breakdown.Contracts.Braintree;
 using Breakdown.Contracts.DTOs;
 using Microsoft.AspNetCore.Http;
@@ -11,8 +12,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Breakdown.API.Controllers.v1
 {
     [ApiController]
-    [Produces("application/json")]
-    [Route("api/v1/[controller]/[action]")]
     public class PaymentController : ControllerBase
     {
         private readonly IBraintreeConfiguration _braintreeConfig;
@@ -22,7 +21,7 @@ namespace Breakdown.API.Controllers.v1
             _braintreeConfig = braintreeConfig;
         }
 
-        [HttpGet]
+        [HttpGet("api/v1/Payment/GetToken")]
         public async Task<IActionResult> GetToken()
         {
             try
@@ -35,12 +34,26 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Checkout(PaymentViewModel paymentViewModel)
+        [HttpPost("api/v1/Payment/Checkout")]
+        public async Task<IActionResult> Checkout(CheckoutViewModel model)
         {
+            if (model == null)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.RequestContentNull });
+            }
+
             try
             {
-                return StatusCode(StatusCodes.Status200OK, await _braintreeConfig.CreateSale(paymentViewModel.Nonce, paymentViewModel.Amount));
+                if (!TryValidateModel(model))
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, new
+                    {
+                        IsSucceeded = false,
+                        Response = ResponseConstants.ValidationFailure
+                    });
+                }
+
+                return StatusCode(StatusCodes.Status200OK, await _braintreeConfig.CreateSale(model.Nonce, model.Amount));
             }
             catch (Exception ex)
             {

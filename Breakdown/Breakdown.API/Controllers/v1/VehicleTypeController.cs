@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Breakdown.API.Constants;
-using Breakdown.API.ViewModels.VehicleTypes;
+using Breakdown.API.ViewModels.VehicleType;
 using Breakdown.Contracts.Interfaces;
 using Breakdown.Domain.Entities;
 using Microsoft.AspNetCore.Http;
@@ -40,13 +40,22 @@ namespace Breakdown.API.Controllers.v1
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false, Response = ResponseConstants.InternalServerError });
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
             }
         }
 
         [HttpGet("api/v1/VehicleType/{vehicleTypeId:int}")]
         public async Task<ActionResult> Get(int vehicleTypeId)
         {
+            if (vehicleTypeId <= 0)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.InvalidData });
+            }
+
             try
             {
                 IEnumerable<VehicleType> vehicleType = await _vehicleTypeRepository.RetrieveAsync(vehicleTypeId);
@@ -60,12 +69,16 @@ namespace Breakdown.API.Controllers.v1
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false, Response = ResponseConstants.InternalServerError });
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
             }
         }
 
         [HttpPost("api/v1/VehicleType")]
-        public async Task<ActionResult> Create(VehicleTypePostViewModel model)
+        public async Task<ActionResult> Create(VehicleTypeBaseViewModel model)
         {
             if (model == null)
             {
@@ -76,18 +89,34 @@ namespace Breakdown.API.Controllers.v1
             {
                 if (!TryValidateModel(model))
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.ValidationFailure });
+                    return StatusCode(StatusCodes.Status400BadRequest, new
+                    {
+                        IsSucceeded = false,
+                        Response = ResponseConstants.ValidationFailure
+                    });
                 }
 
                 VehicleType vehicleTypeEntity = _autoMapper.Map<VehicleType>(model);
-                await _vehicleTypeRepository.CreateAsync(vehicleTypeEntity);
+                int affectedRows = await _vehicleTypeRepository.CreateAsync(vehicleTypeEntity);
+                if (affectedRows <= 0)
+                {
+                    return StatusCode(StatusCodes.Status417ExpectationFailed, new
+                    {
+                        IsSucceeded = false,
+                        Response = ResponseConstants.CreateFailed
+                    });
+                }
 
                 return StatusCode(StatusCodes.Status201Created, new { IsSucceeded = true });
 
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false, Response = ResponseConstants.InternalServerError });
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
             }
         }
 
@@ -103,17 +132,33 @@ namespace Breakdown.API.Controllers.v1
             {
                 if (!TryValidateModel(model))
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.ValidationFailure });
+                    return StatusCode(StatusCodes.Status400BadRequest, new
+                    {
+                        IsSucceeded = false,
+                        Response = ResponseConstants.ValidationFailure
+                    });
                 }
 
                 VehicleType vehicleTypeEntity = _autoMapper.Map<VehicleType>(model);
-                await _vehicleTypeRepository.UpdateAsync(vehicleTypeEntity);
+                int affectedRows = await _vehicleTypeRepository.UpdateAsync(vehicleTypeEntity);
+                if (affectedRows <= 0)
+                {
+                    return StatusCode(StatusCodes.Status417ExpectationFailed, new
+                    {
+                        IsSucceeded = false,
+                        Response = ResponseConstants.UpdateFailed
+                    });
+                }
 
-                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true });
+                return StatusCode(StatusCodes.Status201Created, new { IsSucceeded = true });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false, Response = ResponseConstants.InternalServerError });
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
             }
         }
 
@@ -123,17 +168,29 @@ namespace Breakdown.API.Controllers.v1
             if (vehicleTypeId <= 0)
             {
                 return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.InvalidData });
-
             }
 
             try
             {
-                await _vehicleTypeRepository.DeleteAsync(vehicleTypeId);
-                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true });
+                int affectedRows = await _vehicleTypeRepository.DeleteAsync(vehicleTypeId);
+                if (affectedRows <= 0)
+                {
+                    return StatusCode(StatusCodes.Status417ExpectationFailed, new
+                    {
+                        IsSucceeded = false,
+                        Response = ResponseConstants.DeleteFailed
+                    });
+                }
+
+                return StatusCode(StatusCodes.Status201Created, new { IsSucceeded = true });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false, Message = "Internal Server Error Occured." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Message = ResponseConstants.InternalServerError
+                });
             }
         }
     }

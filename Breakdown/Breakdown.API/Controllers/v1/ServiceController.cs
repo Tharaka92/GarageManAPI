@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Breakdown.API.Constants;
 using Breakdown.API.ViewModels;
+using Breakdown.API.ViewModels.Service;
 using Breakdown.Contracts.Interfaces;
 using Breakdown.Domain.Entities;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +16,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Breakdown.API.Controllers.v1
 {
     [ApiController]
-    [Route("api/v1/[controller]/[action]")]
     public class ServiceController : ControllerBase
     {
         private readonly IMapper _autoMapper;
@@ -26,126 +27,172 @@ namespace Breakdown.API.Controllers.v1
             _serviceRepository = serviceRepository;
         }
 
-        [HttpGet]
+        [HttpGet("api/v1/Service")]
         public async Task<ActionResult> GetAll()
         {
             try
             {
                 IEnumerable<Service> allServices = await _serviceRepository.RetrieveAsync(null);
-                if (allServices.Count() > 0)
-                {
-                    IEnumerable<ServiceViewModel> allServiceViewModels = _autoMapper.Map<IEnumerable<ServiceViewModel>>(allServices);
-                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Services = allServiceViewModels });
-                }
-                else
+                if (allServices.Count() == 0)
                 {
                     return StatusCode(StatusCodes.Status204NoContent);
                 }
+
+                IEnumerable<ServiceGetViewModel> allServiceViewModels = _autoMapper.Map<IEnumerable<ServiceGetViewModel>>(allServices);
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Services = allServiceViewModels });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error Occured." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
             }
         }
 
-        [HttpGet]
+        [HttpGet("api/v1/Service/{serviceId:int}")]
         public async Task<ActionResult> GetById(int serviceId)
         {
+            if (serviceId <= 0)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.InvalidData });
+            }
+
             try
             {
                 IEnumerable<Service> requestedService = await _serviceRepository.RetrieveAsync(serviceId);
-                if (requestedService.Count() > 0)
-                {
-                    ServiceViewModel requestedServiceViewModel = _autoMapper.Map<ServiceViewModel>(requestedService.SingleOrDefault());
-                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Service = requestedServiceViewModel });
-                }
-                else
+                if (requestedService.Count() == 0)
                 {
                     return StatusCode(StatusCodes.Status204NoContent);
                 }
+
+                ServiceGetViewModel requestedServiceViewModel = _autoMapper.Map<ServiceGetViewModel>(requestedService.SingleOrDefault());
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Service = requestedServiceViewModel });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error Occured." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult> Create(ServiceViewModel serviceToCreate)
+        [HttpPost("api/v1/Service")]
+        public async Task<ActionResult> Create(ServiceBaseViewModel model)
         {
+            if (model == null)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.RequestContentNull });
+            }
+
             try
             {
-                if (serviceToCreate != null)
+                if (!TryValidateModel(model))
                 {
-                    Service serviceEntityToCreate = _autoMapper.Map<Service>(serviceToCreate);
-                    int affectedRows = await _serviceRepository.CreateAsync(serviceEntityToCreate);
-                    if (affectedRows == 1)
+                    return StatusCode(StatusCodes.Status400BadRequest, new
                     {
-                        return StatusCode(StatusCodes.Status201Created);
-                    }
-                    else
-                    {
-                        return StatusCode(StatusCodes.Status417ExpectationFailed);
-                    }
+                        IsSucceeded = false,
+                        Response = ResponseConstants.ValidationFailure
+                    });
                 }
-                else
+
+                Service serviceEntityToCreate = _autoMapper.Map<Service>(model);
+                int affectedRows = await _serviceRepository.CreateAsync(serviceEntityToCreate);
+                if (affectedRows <= 0)
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return StatusCode(StatusCodes.Status417ExpectationFailed, new
+                    {
+                        IsSucceeded = false,
+                        Response = ResponseConstants.CreateFailed
+                    });
                 }
+
+                return StatusCode(StatusCodes.Status201Created, new { IsSucceeded = true });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error Occured." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
             }
         }
 
-        [HttpPut]
-        public async Task<ActionResult> Update(ServiceViewModel serviceToUpdate)
+        [HttpPut("api/v1/Service")]
+        public async Task<ActionResult> Update(ServiceUpdateViewModel model)
         {
+            if (model == null)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.RequestContentNull });
+            }
+
             try
             {
-                if (serviceToUpdate != null)
+                if (!TryValidateModel(model))
                 {
-                    Service serviceEntityToUpdate = _autoMapper.Map<Service>(serviceToUpdate);
-                    int affectedRows = await _serviceRepository.UpdateAsync(serviceEntityToUpdate);
-                    if (affectedRows == 1)
+                    return StatusCode(StatusCodes.Status400BadRequest, new
                     {
-                        return StatusCode(StatusCodes.Status200OK);
-                    }
-                    else
-                    {
-                        return StatusCode(StatusCodes.Status417ExpectationFailed);
-                    }
+                        IsSucceeded = false,
+                        Response = ResponseConstants.ValidationFailure
+                    });
                 }
-                else
+
+                Service serviceEntityToUpdate = _autoMapper.Map<Service>(model);
+                int affectedRows = await _serviceRepository.UpdateAsync(serviceEntityToUpdate);
+                if (affectedRows <= 0)
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return StatusCode(StatusCodes.Status417ExpectationFailed, new
+                    {
+                        IsSucceeded = false,
+                        Response = ResponseConstants.UpdateFailed
+                    });
                 }
+
+                return StatusCode(StatusCodes.Status201Created, new { IsSucceeded = true });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error Occured." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("api/v1/Service/{serviceId:int}")]
         public async Task<ActionResult> Delete(int serviceId)
         {
+            if (serviceId <= 0)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.InvalidData });
+            }
+
             try
             {
                 int affectedRows = await _serviceRepository.DeleteAsync(serviceId);
-                if (affectedRows == 1)
+                if (affectedRows <= 0)
                 {
-                    return StatusCode(StatusCodes.Status200OK);
+                    return StatusCode(StatusCodes.Status417ExpectationFailed, new
+                    {
+                        IsSucceeded = false,
+                        Response = ResponseConstants.DeleteFailed
+                    });
                 }
-                else
-                {
-                    return StatusCode(StatusCodes.Status417ExpectationFailed);
-                }
+
+                return StatusCode(StatusCodes.Status201Created, new { IsSucceeded = true });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error Occured." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
             }
         }
     }

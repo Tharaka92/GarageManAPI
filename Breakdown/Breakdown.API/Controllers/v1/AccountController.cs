@@ -11,14 +11,13 @@ using Breakdown.API.TokenUtilities;
 using Breakdown.Domain.Entities;
 using System.Net;
 using System.Net.Http;
-using Breakdown.API.ViewModels;
+using Breakdown.API.ViewModels.Account;
 using Microsoft.EntityFrameworkCore;
+using Breakdown.API.Constants;
 
 namespace Breakdown.API.Controllers.v1
 {
     [ApiController]
-    [Produces("application/json")]
-    [Route("api/v1/[controller]/[action]")]
     public class AccountController : ControllerBase
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -39,105 +38,137 @@ namespace Breakdown.API.Controllers.v1
             _configuration = configuration;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginViewModel loginViewModel)
+        [HttpPost("api/v1/Account/Login")]
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
+            if (model == null)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.RequestContentNull });
+            }
+
             try
             {
-                var result = await _signInManager.PasswordSignInAsync(loginViewModel.Email, loginViewModel.Password, false, false);
-
-                if (result.Succeeded)
+                if (!TryValidateModel(model))
                 {
-                    //var appUser = await _userManager.FindByEmailAsync(loginViewModel.Email);
-                    var appUser = await _userManager.Users.Include(u => u.Service).SingleAsync(u => u.Email == loginViewModel.Email);
-                    var roles = await _userManager.GetRolesAsync(appUser);
-
-                    loginViewModel.UserId = appUser.Id;
-                    loginViewModel.ServiceId = appUser.ServiceId;
-                    loginViewModel.Name = appUser.Name;
-                    loginViewModel.Email = appUser.Email;
-                    loginViewModel.Country = appUser.Country;
-                    loginViewModel.PhoneNumber = appUser.PhoneNumber;
-                    loginViewModel.Token = TokenFactory.GenerateJwtToken(loginViewModel.Email, appUser, _configuration);
-                    loginViewModel.RoleName = roles.FirstOrDefault();
-                    loginViewModel.Password = string.Empty;
-                    if (appUser.Service != null)
+                    return StatusCode(StatusCodes.Status400BadRequest, new
                     {
-                        loginViewModel.ServiceName = appUser.Service.ServiceName;
-                        loginViewModel.UniqueCode = appUser.Service.UniqueCode;
-                    }
+                        IsSucceeded = false,
+                        Response = ResponseConstants.ValidationFailure
+                    });
+                }
 
-                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, AuthData = loginViewModel });
-                }
-                else
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+                if (!result.Succeeded)
                 {
-                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, Error = "Invalid email or password." });
+                    return StatusCode(StatusCodes.Status400BadRequest, new
+                    {
+                        IsSucceeded = false,
+                        Response = ResponseConstants.InvalidCredentials
+                    });
                 }
+
+                var appUser = await _userManager.Users.Include(u => u.Service).SingleAsync(u => u.Email == model.Email);
+                var roles = await _userManager.GetRolesAsync(appUser);
+
+                model.UserId = appUser.Id;
+                model.ServiceId = appUser.ServiceId;
+                model.Name = appUser.Name;
+                model.Email = appUser.Email;
+                model.Country = appUser.Country;
+                model.PhoneNumber = appUser.PhoneNumber;
+                model.Token = TokenFactory.GenerateJwtToken(model.Email, appUser, _configuration);
+                model.RoleName = roles.FirstOrDefault();
+                model.Password = string.Empty;
+                if (appUser.Service != null)
+                {
+                    model.ServiceName = appUser.Service.ServiceName;
+                    model.UniqueCode = appUser.Service.UniqueCode;
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, AuthData = model });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false });
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Register([FromBody] RegisterViewModel registerViewModel)
+        [HttpPost("api/v1/Account/Register")]
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
+            if (model == null)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.RequestContentNull });
+            }
+
             try
             {
-                if (!ModelState.IsValid)
+                if (!TryValidateModel(model))
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = ModelState.IsValid, Errors = ModelState });
+                    return StatusCode(StatusCodes.Status400BadRequest, new
+                    {
+                        IsSucceeded = false,
+                        Response = ResponseConstants.ValidationFailure
+                    });
                 }
 
-                if (!await _roleManager.RoleExistsAsync(registerViewModel.RoleName))
+                if (!await _roleManager.RoleExistsAsync(model.RoleName))
                 {
-                    await _roleManager.CreateAsync(new IdentityRole<int>() { Name = registerViewModel.RoleName });
+                    await _roleManager.CreateAsync(new IdentityRole<int>() { Name = model.RoleName });
                 }
 
                 var user = new ApplicationUser
                 {
-                    Name = registerViewModel.Name,
-                    Country = registerViewModel.Country,
-                    PhoneNumber = registerViewModel.PhoneNumber,
-                    UserName = registerViewModel.Email,
-                    Email = registerViewModel.Email,
-                    ServiceId = registerViewModel.ServiceId
+                    Name = model.Name,
+                    Country = model.Country,
+                    PhoneNumber = model.PhoneNumber,
+                    UserName = model.Email,
+                    Email = model.Email,
+                    ServiceId = model.ServiceId
                 };
 
-                var result = await _userManager.CreateAsync(user, registerViewModel.Password);
-
-                if (result.Succeeded)
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (!result.Succeeded)
                 {
-                    if (!await _userManager.IsInRoleAsync(user, registerViewModel.RoleName))
+                    return StatusCode(StatusCodes.Status417ExpectationFailed, new
                     {
-                        await _userManager.AddToRoleAsync(user, registerViewModel.RoleName);
-                    }
-
-                    await _signInManager.SignInAsync(user, false);
-
-                    var appUser = await _userManager.Users.Include(u => u.Service).SingleAsync(u => u.Email == registerViewModel.Email);
-
-                    registerViewModel.UserId = user.Id;
-                    registerViewModel.ServiceId = user.ServiceId;
-                    registerViewModel.Token = TokenFactory.GenerateJwtToken(registerViewModel.Email, user, _configuration);
-                    registerViewModel.Password = string.Empty;
-                    if (appUser.Service != null)
-                    {
-                        registerViewModel.ServiceName = appUser.Service.ServiceName;
-                        registerViewModel.UniqueCode = appUser.Service.UniqueCode;
-                    }
-
-                    return Created("", new { IsSucceeded = result.Succeeded, AuthData = registerViewModel });
+                        IsSucceeded = false,
+                        Response = ResponseConstants.CreateFailed
+                    });
                 }
-                else
+
+                if (!await _userManager.IsInRoleAsync(user, model.RoleName))
                 {
-                    return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, Error = result.Errors });
+                    await _userManager.AddToRoleAsync(user, model.RoleName);
                 }
+
+                await _signInManager.SignInAsync(user, false);
+
+                var appUser = await _userManager.Users.Include(u => u.Service).SingleAsync(u => u.Email == model.Email);
+
+                model.UserId = user.Id;
+                model.ServiceId = user.ServiceId;
+                model.Token = TokenFactory.GenerateJwtToken(model.Email, user, _configuration);
+                model.Password = string.Empty;
+                if (appUser.Service != null)
+                {
+                    model.ServiceName = appUser.Service.ServiceName;
+                    model.UniqueCode = appUser.Service.UniqueCode;
+                }
+
+                return StatusCode(StatusCodes.Status201Created, new { IsSucceeded = result.Succeeded, AuthData = model });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { IsSucceeded = false });
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
             }
         }
     }

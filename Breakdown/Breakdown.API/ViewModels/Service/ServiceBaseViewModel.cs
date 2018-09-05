@@ -4,19 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Breakdown.API.ViewModels
+namespace Breakdown.API.ViewModels.Service
 {
-    public class ServiceViewModel
+    public class ServiceBaseViewModel
     {
-        public int ServiceId { get; set; }
-
+        [Required]
         public string ServiceName { get; set; }
 
         [StringLength(5)]
         public string UniqueCode { get; set; }
-
-        public bool IsDeleted { get; set; }
-
-        public IEnumerable<PackageViewModel> Packages { get; set; }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Breakdown.API.ViewModels;
-using Breakdown.API.ViewModels.VehicleTypes;
+using Breakdown.API.ViewModels.Package;
+using Breakdown.API.ViewModels.Service;
+using Breakdown.API.ViewModels.VehicleType;
 using Breakdown.Contracts.DTOs;
 using Breakdown.Domain.Entities;
 using System;
@@ -14,12 +16,16 @@ namespace Breakdown.API.AutoMapperConfig
     {
         public MappingProfile()
         {
-            CreateMap<Service, ServiceViewModel>().ReverseMap();
+            CreateMap<Service, ServiceGetViewModel>().ReverseMap();
+            CreateMap<Service, ServiceBaseViewModel>().ReverseMap();
+            CreateMap<Service, ServiceUpdateViewModel>().ReverseMap();
 
-            CreateMap<Package, PackageViewModel>().ReverseMap();
+            CreateMap<Package, PackageGetViewModel>().ReverseMap();
+            CreateMap<Package, PackageBaseViewModel>().ReverseMap();
+            CreateMap<Package, PackageUpdateViewModel>().ReverseMap();
 
             CreateMap<VehicleType, VehicleTypeGetViewModel>().ReverseMap();
-            CreateMap<VehicleType, VehicleTypePostViewModel>().ReverseMap();
+            CreateMap<VehicleType, VehicleTypeBaseViewModel>().ReverseMap();
             CreateMap<VehicleType, VehicleTypeUpdateViewModel>().ReverseMap();
         }
     }

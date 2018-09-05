@@ -30,5 +30,11 @@ namespace Breakdown.API.Constants
         public static string UserNull = "User Null.";
 
         public static string InvalidData = "Contains Invalid Data.";
+
+        public static string CreateFailed = "Failed to Create.";
+
+        public static string UpdateFailed = "Failed to Update.";
+
+        public static string DeleteFailed = "Failed to Delete.";
     }
 }
