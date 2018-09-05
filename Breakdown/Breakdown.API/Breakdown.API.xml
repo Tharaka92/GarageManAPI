@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Breakdown.API</name>
+    </assembly>
+    <members>
+        <member name="M:Breakdown.API.Controllers.WelcomeController.Get">
+            <summary>
+            Junk method to check API availability
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

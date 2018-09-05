@@ -17,7 +17,5 @@ namespace Breakdown.API.ViewModels.Package
 
         [Required]
         public decimal Price { get; set; }
-
-        public bool IsDeleted { get; set; }
     }
 }

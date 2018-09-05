@@ -16,8 +16,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Swagger;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace Breakdown.API
@@ -78,6 +82,29 @@ namespace Breakdown.API
 
             services.AddAutoMapper(am => am.AddProfile(new MappingProfile()));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "GarageMan API", Version = "1.0" });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+
+                //var security = new Dictionary<string, IEnumerable<string>>
+                //{
+                //    {"Bearer", new string[] { }},
+                //};
+
+                //c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                //{
+                //    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                //    Name = "Authorization",
+                //    In = "header",
+                //    Type = "apiKey"
+                //});
+
+                //c.AddSecurityRequirement(security);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -87,9 +114,19 @@ namespace Breakdown.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts();
+            }
 
-            // ===== Use Authentication ======
+            app.UseHttpsRedirection();
             app.UseAuthentication();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "GarageMan API Version 1.0");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseMvc();
         }
