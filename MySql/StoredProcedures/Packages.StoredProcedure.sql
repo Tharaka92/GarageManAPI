@@ -5,11 +5,13 @@
 DELIMITER $$
 CREATE PROCEDURE `SPRetrievePackage`(
 PackageId  int,
-ServiceId int)
+ServiceId int,
+VehicleTypeId int)
 BEGIN
  SELECT 
 	Packages.PackageId,
 	Packages.ServiceId,
+	Packages.VehicleTypeId,
 	Packages.Name,
 	Packages.Description,
 	Packages.Price,
@@ -18,6 +20,7 @@ BEGIN
  WHERE 
 	(1 = CASE WHEN PackageId IS NULL THEN 1 WHEN Packages.PackageId = PackageId THEN 1 ELSE 0 END) AND
 	(1 = CASE WHEN ServiceId IS NULL THEN 1 WHEN Packages.ServiceId = ServiceId THEN 1 ELSE 0 END) AND
+	(1 = CASE WHEN VehicleTypeId IS NULL THEN 1 WHEN Packages.VehicleTypeId = VehicleTypeId THEN 1 ELSE 0 END) AND
     Packages.IsDeleted = 0;
 END$$
 DELIMITER $$
@@ -29,11 +32,12 @@ DELIMITER $$
 DELIMITER $$
 CREATE PROCEDURE `SPInsertPackage`(
 ServiceId int,
+VehicleTypeId int,
 Name varchar(100),
 Description varchar(1000),
 Price decimal)
 BEGIN
- INSERT INTO Packages (Name,Description,Price) VALUES (Name,Description,Price);
+ INSERT INTO Packages (ServiceId,VehicleTypeId,Name,Description,Price) VALUES (ServiceId,VehicleTypeId,Name,Description,Price);
 END$$
 DELIMITER $$
 

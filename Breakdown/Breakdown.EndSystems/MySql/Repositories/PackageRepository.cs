@@ -30,6 +30,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
                 SPInsertPackage parameters = new SPInsertPackage()
                 {
                     ServiceId = packageToCreate.ServiceId,
+                    VehicleTypeId = packageToCreate.VehicleTypeId,
                     Name = packageToCreate.Name,
                     Description = packageToCreate.Description,
                     Price = packageToCreate.Price
@@ -68,14 +69,15 @@ namespace Breakdown.EndSystems.MySql.Repositories
             }
         }
 
-        public async Task<IEnumerable<Package>> RetrieveAsync(int? packageId, int? serviceId)
+        public async Task<IEnumerable<Package>> RetrieveAsync(int? packageId, int? serviceId, int? vehicleTypeId)
         {
             try
             {
                 SPRetrievePackage parameters = new SPRetrievePackage
                 {
                     PackageId = packageId.HasValue ? packageId : null,
-                    ServiceId = serviceId.HasValue ? serviceId : null
+                    ServiceId = serviceId.HasValue ? serviceId : null,
+                    VehicleTypeId = vehicleTypeId.HasValue ? vehicleTypeId : null
                 };
 
                 using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))

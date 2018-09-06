@@ -8,5 +8,6 @@ namespace Breakdown.EndSystems.MySql.StoredProcedures
     {
         public int? PackageId { get; set; }
         public int? ServiceId { get; set; }
+        public int? VehicleTypeId { get; set; }
     }
 }

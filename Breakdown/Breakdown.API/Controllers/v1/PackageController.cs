@@ -31,7 +31,7 @@ namespace Breakdown.API.Controllers.v1
         {
             try
             {
-                IEnumerable<Package> allPackages = await _packageRepository.RetrieveAsync(null, null);
+                IEnumerable<Package> allPackages = await _packageRepository.RetrieveAsync(null, null, null);
                 if (allPackages.Count() == 0)
                 {
                     return StatusCode(StatusCodes.Status204NoContent);
@@ -60,7 +60,7 @@ namespace Breakdown.API.Controllers.v1
 
             try
             {
-                IEnumerable<Package> requestedPackage = await _packageRepository.RetrieveAsync(packageId, null);
+                IEnumerable<Package> requestedPackage = await _packageRepository.RetrieveAsync(packageId, null, null);
                 if (requestedPackage.Count() == 0)
                 {
                     return StatusCode(StatusCodes.Status204NoContent);
@@ -89,7 +89,37 @@ namespace Breakdown.API.Controllers.v1
 
             try
             {
-                IEnumerable<Package> requestedPackage = await _packageRepository.RetrieveAsync(null, serviceId);
+                IEnumerable<Package> requestedPackage = await _packageRepository.RetrieveAsync(null, serviceId, null);
+                if (requestedPackage.Count() == 0)
+                {
+                    return StatusCode(StatusCodes.Status204NoContent);
+                }
+
+                IEnumerable<PackageGetViewModel> requestedPackageViewModels = _autoMapper.Map<IEnumerable<PackageGetViewModel>>(requestedPackage);
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Packages = requestedPackageViewModels });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
+            }
+        }
+
+        [HttpGet("api/v1/Package/{vehicleTypeId:int}")]
+        public async Task<ActionResult> GetByVehicleTypeId(int vehicleTypeId)
+        {
+            if (vehicleTypeId <= 0)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.InvalidData });
+            }
+
+            try
+            {
+                IEnumerable<Package> requestedPackage = await _packageRepository.RetrieveAsync(null, null, vehicleTypeId);
                 if (requestedPackage.Count() == 0)
                 {
                     return StatusCode(StatusCodes.Status204NoContent);

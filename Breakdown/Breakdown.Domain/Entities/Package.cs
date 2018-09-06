@@ -14,7 +14,7 @@ namespace Breakdown.Domain.Entities
         public decimal Price { get; set; }
         public bool IsDeleted { get; set; }
 
-        public VehicleType VehicleType { get; set; }
         public Service Service { get; set; }
+        public VehicleType VehicleType { get; set; }
     }
 }
