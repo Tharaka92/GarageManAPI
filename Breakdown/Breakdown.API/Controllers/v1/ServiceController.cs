@@ -28,7 +28,7 @@ namespace Breakdown.API.Controllers.v1
         }
 
         [HttpGet("api/v1/Service")]
-        public async Task<ActionResult> GetAll()
+        public async Task<ActionResult> Get()
         {
             try
             {
