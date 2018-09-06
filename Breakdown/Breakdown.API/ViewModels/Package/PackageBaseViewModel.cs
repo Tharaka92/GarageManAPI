@@ -10,6 +10,8 @@ namespace Breakdown.API.ViewModels.Package
     {
         public int? ServiceId { get; set; }
 
+        public int? VehicleTypeId { get; set; }
+
         [Required]
         public string Name { get; set; }
 
