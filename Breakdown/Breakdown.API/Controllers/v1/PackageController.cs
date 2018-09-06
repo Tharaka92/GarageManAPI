@@ -79,7 +79,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
-        [HttpGet("api/v1/Package/{serviceId:int}")]
+        [HttpGet("api/v1/Package/GetByServiceId/{serviceId:int}")]
         public async Task<ActionResult> GetByServiceId(int serviceId)
         {
             if (serviceId <= 0)
@@ -109,7 +109,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
-        [HttpGet("api/v1/Package/{vehicleTypeId:int}")]
+        [HttpGet("api/v1/Package/GetByVehicleTypeId/{vehicleTypeId:int}")]
         public async Task<ActionResult> GetByVehicleTypeId(int vehicleTypeId)
         {
             if (vehicleTypeId <= 0)

@@ -36,7 +36,7 @@ namespace Breakdown.API.Controllers.v1
                 }
 
                 IEnumerable<VehicleTypeGetViewModel> vehicleTypeGetVms = _autoMapper.Map<IEnumerable<VehicleTypeGetViewModel>>(vehicleTypes);
-                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Response = vehicleTypeGetVms });
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, VehicleTypes = vehicleTypeGetVms });
             }
             catch (Exception ex)
             {
@@ -65,7 +65,7 @@ namespace Breakdown.API.Controllers.v1
                 }
 
                 VehicleTypeGetViewModel vehicleTypeGetVm = _autoMapper.Map<VehicleTypeGetViewModel>(vehicleType.SingleOrDefault());
-                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Response = vehicleTypeGetVm });
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, VehicleType = vehicleTypeGetVm });
             }
             catch (Exception ex)
             {
