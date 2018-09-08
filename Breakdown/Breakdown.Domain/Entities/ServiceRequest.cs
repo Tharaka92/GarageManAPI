@@ -9,12 +9,19 @@ namespace Breakdown.Domain.Entities
     {
         public int ServiceRequestId { get; set; }
 
+        [ForeignKey("ApplicationUser")]
         public int CustomerId { get; set; }
 
+        [ForeignKey("ApplicationUser")]
         public int PartnerId { get; set; }
 
+        [ForeignKey("Service")]
         public int ServiceId { get; set; }
 
+        [ForeignKey("VehicleType")]
+        public int? VehicleTypeId { get; set; }
+
+        [ForeignKey("Package")]
         public int PackageId { get; set; }
 
         public DateTime StartDate { get; set; }
@@ -22,11 +29,15 @@ namespace Breakdown.Domain.Entities
         public DateTime EndDate { get; set; }
 
         public string Status { get; set; }
+        
+        public ApplicationUser Customer { get; set; }
 
-        [ForeignKey("ServiceId")]
+        public ApplicationUser Partner { get; set; }
+
         public Service Service { get; set; }
 
-        [ForeignKey("PackageId")]
+        public VehicleType VehicleType { get; set; }
+
         public Package Package { get; set; }
     }
 }
