@@ -1,23 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Breakdown.API.ViewModels.Account
 {
-    public class LoginViewModel
+    public class LoginResponseViewModel
     {
         public int UserId { get; set; }
 
         public int? ServiceId { get; set; }
 
-        [Required]
-        [EmailAddress]
         public string Email { get; set; }
-
-        [Required]
-        public string Password { get; set; }
 
         public string Name { get; set; }
 
@@ -32,5 +26,9 @@ namespace Breakdown.API.ViewModels.Account
         public string ServiceName { get; set; }
 
         public string UniqueCode { get; set; }
+
+        public string VehicleNumber { get; set; }
+
+        public string ProfileImageUrl { get; set; }
     }
 }

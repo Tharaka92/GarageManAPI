@@ -39,7 +39,7 @@ namespace Breakdown.API.Controllers.v1
         }
 
         [HttpPost("api/v1/Account/Login")]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginRequestViewModel model)
         {
             if (model == null)
             {
@@ -70,22 +70,27 @@ namespace Breakdown.API.Controllers.v1
                 var appUser = await _userManager.Users.Include(u => u.Service).SingleAsync(u => u.Email == model.Email);
                 var roles = await _userManager.GetRolesAsync(appUser);
 
-                model.UserId = appUser.Id;
-                model.ServiceId = appUser.ServiceId;
-                model.Name = appUser.Name;
-                model.Email = appUser.Email;
-                model.Country = appUser.Country;
-                model.PhoneNumber = appUser.PhoneNumber;
-                model.Token = TokenFactory.GenerateJwtToken(model.Email, appUser, _configuration);
-                model.RoleName = roles.FirstOrDefault();
-                model.Password = string.Empty;
+                LoginResponseViewModel loginResponse = new LoginResponseViewModel
+                {
+                    UserId = appUser.Id,
+                    ServiceId = appUser.ServiceId,
+                    Name = appUser.Name,
+                    Email = appUser.Email,
+                    Country = appUser.Country,
+                    PhoneNumber = appUser.PhoneNumber,
+                    Token = TokenFactory.GenerateJwtToken(model.Email, appUser, _configuration),
+                    RoleName = roles.FirstOrDefault(),
+                    ProfileImageUrl = appUser.ProfileImageUrl,
+                    VehicleNumber = appUser.VehicleNumber
+                };
+
                 if (appUser.Service != null)
                 {
-                    model.ServiceName = appUser.Service.ServiceName;
-                    model.UniqueCode = appUser.Service.UniqueCode;
+                    loginResponse.ServiceName = appUser.Service.ServiceName;
+                    loginResponse.UniqueCode = appUser.Service.UniqueCode;
                 }
 
-                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, AuthData = model });
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded, AuthData = loginResponse });
             }
             catch (Exception ex)
             {
