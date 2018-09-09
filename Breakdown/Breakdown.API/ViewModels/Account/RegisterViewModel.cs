@@ -8,8 +8,6 @@ namespace Breakdown.API.ViewModels.Account
 {
     public class RegisterViewModel
     {
-        public int UserId { get; set; }
-
         public int? ServiceId { get; set; }
 
         [Required]
@@ -19,20 +17,16 @@ namespace Breakdown.API.ViewModels.Account
         [Required]
         public string Password { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
+        [Required]
         public string Country { get; set; }
 
         [Required]
         public string PhoneNumber { get; set; }
 
-        public string Token { get; set; }
-
         [Required]
         public string RoleName { get; set; }
-
-        public string ServiceName { get; set; }
-
-        public string UniqueCode { get; set; }
     }
 }

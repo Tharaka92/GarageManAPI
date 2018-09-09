@@ -147,20 +147,7 @@ namespace Breakdown.API.Controllers.v1
                 }
 
                 await _signInManager.SignInAsync(user, false);
-
-                var appUser = await _userManager.Users.Include(u => u.Service).SingleAsync(u => u.Email == model.Email);
-
-                model.UserId = user.Id;
-                model.ServiceId = user.ServiceId;
-                model.Token = TokenFactory.GenerateJwtToken(model.Email, user, _configuration);
-                model.Password = string.Empty;
-                if (appUser.Service != null)
-                {
-                    model.ServiceName = appUser.Service.ServiceName;
-                    model.UniqueCode = appUser.Service.UniqueCode;
-                }
-
-                return StatusCode(StatusCodes.Status201Created, new { IsSucceeded = result.Succeeded, AuthData = model });
+                return StatusCode(StatusCodes.Status201Created, new { IsSucceeded = result.Succeeded });
             }
             catch (Exception ex)
             {
