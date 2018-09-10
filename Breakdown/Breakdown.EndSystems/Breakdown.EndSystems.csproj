@@ -16,6 +16,8 @@
     <Compile Remove="Migrations\20180728153237_RecreateDb.cs" />
     <Compile Remove="Migrations\20180728153341_RecreateDb.cs" />
     <Compile Remove="Migrations\20180908134524_ServiceRequestRelationshipsModified.cs" />
+    <Compile Remove="Migrations\20180910112923_ServiceRequestTableModified.cs" />
+    <Compile Remove="Migrations\20180910113039_ServiceRequestTableModified.cs" />
   </ItemGroup>
 
   <ItemGroup>

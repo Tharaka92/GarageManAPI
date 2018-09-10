@@ -2,6 +2,7 @@
 using Breakdown.API.ViewModels;
 using Breakdown.API.ViewModels.Package;
 using Breakdown.API.ViewModels.Service;
+using Breakdown.API.ViewModels.ServiceRequest;
 using Breakdown.API.ViewModels.VehicleType;
 using Breakdown.Contracts.DTOs;
 using Breakdown.Domain.Entities;
@@ -27,6 +28,8 @@ namespace Breakdown.API.AutoMapperConfig
             CreateMap<VehicleType, VehicleTypeGetViewModel>().ReverseMap();
             CreateMap<VehicleType, VehicleTypeBaseViewModel>().ReverseMap();
             CreateMap<VehicleType, VehicleTypeUpdateViewModel>().ReverseMap();
+
+            CreateMap<ServiceRequest, ServiceRequestPostViewModel>().ReverseMap();
         }
     }
 }

@@ -28,8 +28,12 @@ namespace Breakdown.Domain.Entities
 
         public DateTime EndDate { get; set; }
 
-        public string Status { get; set; }
-        
+        public string ServiceRequestStatus { get; set; }
+
+        public string PaymentStatus { get; set; }
+
+        public bool IsCompleted { get; set; }
+
         public ApplicationUser Customer { get; set; }
 
         public ApplicationUser Partner { get; set; }
