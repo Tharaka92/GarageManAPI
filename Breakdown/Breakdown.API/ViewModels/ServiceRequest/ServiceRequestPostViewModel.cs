@@ -23,7 +23,7 @@ namespace Breakdown.API.ViewModels.ServiceRequest
         public int PackageId { get; set; }
 
         [Required]
-        public DateTime StartDate { get; set; }
+        public DateTime SubmittedDate { get; set; }
 
         [Required]
         public string ServiceRequestStatus { get; set; }

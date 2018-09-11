@@ -33,7 +33,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
                     ServiceId = serviceRequestToCreate.ServiceId,
                     VehicleTypeId = serviceRequestToCreate.VehicleTypeId,
                     PackageId = serviceRequestToCreate.PackageId,
-                    StartDate = serviceRequestToCreate.StartDate,
+                    SubmittedDate = serviceRequestToCreate.SubmittedDate,
                     ServiceRequestStatus = serviceRequestToCreate.ServiceRequestStatus,
                     PaymentStatus = serviceRequestToCreate.PaymentStatus,
                 };

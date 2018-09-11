@@ -30,14 +30,14 @@ PartnerId int,
 ServiceId int,
 VehicleTypeId int,
 PackageId int,
-StartDate datetime,
+SubmittedDate datetime,
 ServiceRequestStatus varchar(100),
 PaymentStatus varchar(100))
 BEGIN
 	INSERT INTO ServiceRequests
-		(CustomerId, PartnerId, ServiceId, VehicleTypeId, PackageId, StartDate, ServiceRequestStatus, PaymentStatus)
+		(CustomerId, PartnerId, ServiceId, VehicleTypeId, PackageId, SubmittedDate, ServiceRequestStatus, PaymentStatus)
 	VALUES
-		(CustomerId, PartnerId, ServiceId, VehicleTypeId, PackageId, StartDate, ServiceRequestStatus, PaymentStatus);
+		(CustomerId, PartnerId, ServiceId, VehicleTypeId, PackageId, SubmittedDate, ServiceRequestStatus, PaymentStatus);
 END$$
 DELIMITER $$
 

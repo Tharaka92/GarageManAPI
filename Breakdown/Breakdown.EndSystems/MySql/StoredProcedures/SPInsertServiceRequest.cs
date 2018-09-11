@@ -16,7 +16,7 @@ namespace Breakdown.EndSystems.MySql.StoredProcedures
 
         public int PackageId { get; set; }
 
-        public DateTime StartDate { get; set; }
+        public DateTime SubmittedDate { get; set; }
 
         public string ServiceRequestStatus { get; set; }
 

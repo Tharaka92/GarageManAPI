@@ -24,9 +24,11 @@ namespace Breakdown.Domain.Entities
         [ForeignKey("Package")]
         public int PackageId { get; set; }
 
-        public DateTime StartDate { get; set; }
+        public DateTime SubmittedDate { get; set; }
 
-        public DateTime EndDate { get; set; }
+        public DateTime? StartDate { get; set; }
+
+        public DateTime? EndDate { get; set; }
 
         public string ServiceRequestStatus { get; set; }
 
