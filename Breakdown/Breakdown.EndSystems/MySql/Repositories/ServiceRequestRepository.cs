@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,13 +36,37 @@ namespace Breakdown.EndSystems.MySql.Repositories
                     PackageId = serviceRequestToCreate.PackageId,
                     SubmittedDate = serviceRequestToCreate.SubmittedDate,
                     ServiceRequestStatus = serviceRequestToCreate.ServiceRequestStatus,
-                    PaymentStatus = serviceRequestToCreate.PaymentStatus,
+                    PaymentStatus = serviceRequestToCreate.PaymentStatus
                 };
 
                 using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))
                 {
                     connection.Open();
                     return await connection.ExecuteAsync(sql: parameters.GetName(), param: parameters, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<int> GetLatestServiceRequestIdAsync(int partnerId, int customerId, string serviceRequestStatus)
+        {
+            try
+            {
+                SPRetrieveLatestServiceRequestId parameters = new SPRetrieveLatestServiceRequestId()
+                {
+                    CustomerId = customerId,
+                    PartnerId = partnerId,
+                    ServiceRequestStatus = serviceRequestStatus
+                };
+
+                using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))
+                {
+                    connection.Open();
+                    var ids = await connection.QueryAsync<int>(sql: parameters.GetName(), param: parameters, commandType: CommandType.StoredProcedure);
+                    return ids.ToList().SingleOrDefault();
                 }
             }
             catch (Exception ex)

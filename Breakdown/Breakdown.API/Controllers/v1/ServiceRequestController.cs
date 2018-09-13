@@ -24,6 +24,44 @@ namespace Breakdown.API.Controllers.v1
             _serviceRequestRepository = serviceRequestRepository;
         }
 
+        [HttpGet("api/v1/ServiceRequest")]
+        public async Task<ActionResult> GetLatestServiceRequestId(int partnerId, int customerId, string serviceRequestStatus)
+        {
+            if (partnerId <= 0)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.InvalidData });
+            }
+
+            if (customerId <= 0)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.InvalidData });
+            }
+
+            if (string.IsNullOrEmpty(serviceRequestStatus))
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.InvalidData });
+            }
+
+            try
+            {
+                int latestServiceRequestId = await _serviceRequestRepository.GetLatestServiceRequestIdAsync(partnerId, customerId, serviceRequestStatus);
+                if (latestServiceRequestId <= 0)
+                {
+                    return StatusCode(StatusCodes.Status204NoContent);
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, LatestServiceRequestId = latestServiceRequestId });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
+            }
+        }
+
         [HttpPost("api/v1/ServiceRequest")]
         public async Task<ActionResult> Create(ServiceRequestPostViewModel model)
         {

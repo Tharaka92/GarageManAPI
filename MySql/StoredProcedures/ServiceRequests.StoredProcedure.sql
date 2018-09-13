@@ -1,22 +1,25 @@
--- -- ----------------------------------------------------------------------------
--- -- Routine SPRetrieveVehicleType
--- -- ----------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------
+-- Routine SPRetrieveLatestServiceRequest
+-- ----------------------------------------------------------------------------
 
--- DELIMITER $$
--- CREATE PROCEDURE `SPRetrieveVehicleType`(
--- VehicleTypeId  int)
--- BEGIN
---  SELECT 
--- 	VehicleTypes.VehicleTypeId,
--- 	VehicleTypes.Name,
--- 	VehicleTypes.Description,
--- 	VehicleTypes.IsDeleted
---  FROM VehicleTypes
---  WHERE 
--- 	(1 = CASE WHEN VehicleTypeId IS NULL THEN 1 WHEN VehicleTypes.VehicleTypeId = VehicleTypeId THEN 1 ELSE 0 END) AND
---     VehicleTypes.IsDeleted = 0;
--- END$$
--- DELIMITER $$
+DELIMITER $$
+CREATE PROCEDURE `SPRetrieveLatestServiceRequestId`(
+PartnerId  int,
+CustomerId int,
+ServiceRequestStatus varchar(100))
+BEGIN
+ SELECT 
+	ServiceRequests.ServiceRequestId
+ FROM ServiceRequests
+ WHERE 
+ 	ServiceRequests.ServiceRequestStatus = ServiceRequestStatus AND
+	ServiceRequests.PartnerId = PartnerId AND
+	ServiceRequests.CustomerId = CustomerId AND
+    ServiceRequests.IsCompleted = 0
+ ORDER BY SubmittedDate DESC 
+ LIMIT 1;
+END$$
+DELIMITER $$
 
 -- ----------------------------------------------------------------------------
 -- Routine SPInsertServiceRequest
