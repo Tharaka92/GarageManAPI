@@ -36,5 +36,7 @@ namespace Breakdown.API.Constants
         public static string UpdateFailed = "Failed to Update.";
 
         public static string DeleteFailed = "Failed to Delete.";
+
+        public static string CancelFailed = "Failed to Cancel.";
     }
 }

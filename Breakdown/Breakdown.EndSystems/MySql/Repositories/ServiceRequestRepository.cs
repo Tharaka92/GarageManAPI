@@ -74,5 +74,27 @@ namespace Breakdown.EndSystems.MySql.Repositories
                 throw ex;
             }
         }
+
+        public async Task<int> CancelAsync(int serviceRequestId, string serviceRequestStatus)
+        {
+            try
+            {
+                SPCancelServiceRequest parameters = new SPCancelServiceRequest()
+                {
+                    ServiceRequestId = serviceRequestId,
+                    ServiceRequestStatus = serviceRequestStatus,
+                };
+
+                using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))
+                {
+                    connection.Open();
+                    return await connection.ExecuteAsync(sql: parameters.GetName(), param: parameters, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

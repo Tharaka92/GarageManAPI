@@ -45,21 +45,19 @@ END$$
 DELIMITER $$
 
 -- ----------------------------------------------------------------------------
--- Routine SPUpdateVehicleType
+-- Routine SPCancelServiceRequest
 -- ----------------------------------------------------------------------------
 
--- DELIMITER $$
--- CREATE PROCEDURE `SPUpdateVehicleType`(
--- VehicleTypeId  int,
--- Name varchar(100),
--- Description varchar(300))
--- BEGIN
---  UPDATE VehicleTypes SET 
--- 	VehicleTypes.Name = Name,
--- 	VehicleTypes.Description = Description
---  WHERE VehicleTypes.VehicleTypeId = VehicleTypeId; 
--- END$$
--- DELIMITER $$
+DELIMITER $$
+CREATE PROCEDURE `SPCancelServiceRequest`(
+ServiceRequestId  int,
+ServiceRequestStatus varchar(100))
+BEGIN
+ UPDATE ServiceRequests SET 
+	ServiceRequests.ServiceRequestStatus = ServiceRequestStatus
+ WHERE ServiceRequests.ServiceRequestId = ServiceRequestId; 
+END$$
+DELIMITER $$
 
 -- ----------------------------------------------------------------------------
 -- Routine SPDeleteVehicleType

@@ -24,7 +24,7 @@ namespace Breakdown.API.Controllers.v1
             _serviceRequestRepository = serviceRequestRepository;
         }
 
-        [HttpGet("api/v1/ServiceRequest")]
+        [HttpGet("api/v1/ServiceRequest/GetLatestServiceRequestId")]
         public async Task<ActionResult> GetLatestServiceRequestId(int partnerId, int customerId, string serviceRequestStatus)
         {
             if (partnerId <= 0)
@@ -113,6 +113,53 @@ namespace Breakdown.API.Controllers.v1
                 }
 
                 return StatusCode(StatusCodes.Status201Created, new { IsSucceeded = true });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
+            }
+        }
+
+        [HttpPut("api/v1/ServiceRequest/CancelServiceRequest")]
+        public async Task<ActionResult> CancelServiceRequest(CancelServiceRequestViewModel model)
+        {
+            if (model == null)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.RequestContentNull });
+            }
+
+            if (model.ServiceRequestId <= 0)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.InvalidData });
+            }
+
+            try
+            {
+                if (!TryValidateModel(model))
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, new
+                    {
+                        IsSucceeded = false,
+                        Response = ResponseConstants.ValidationFailure
+                    });
+                }
+
+                int affectedRows = await _serviceRequestRepository.CancelAsync(model.ServiceRequestId, model.ServiceRequestStatus);
+                if (affectedRows <= 0)
+                {
+                    return StatusCode(StatusCodes.Status417ExpectationFailed, new
+                    {
+                        IsSucceeded = false,
+                        Response = ResponseConstants.CancelFailed
+                    });
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true });
 
             }
             catch (Exception ex)

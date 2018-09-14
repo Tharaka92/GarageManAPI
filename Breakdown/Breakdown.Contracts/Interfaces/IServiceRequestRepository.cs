@@ -9,6 +9,7 @@ namespace Breakdown.Contracts.Interfaces
     public interface IServiceRequestRepository
     {
         Task<int> CreateAsync(ServiceRequest serviceRequestToCreate);
-        Task<int> GetLatestServiceRequestIdAsync(int partnerId, int customerId, string serviceRequestStatus); 
+        Task<int> GetLatestServiceRequestIdAsync(int partnerId, int customerId, string serviceRequestStatus);
+        Task<int> CancelAsync(int serviceRequestId, string serviceRequestStatus);
     }
 }
