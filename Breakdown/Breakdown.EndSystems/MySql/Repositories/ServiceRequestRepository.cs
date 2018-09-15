@@ -75,14 +75,41 @@ namespace Breakdown.EndSystems.MySql.Repositories
             }
         }
 
-        public async Task<int> CancelAsync(int serviceRequestId, string serviceRequestStatus)
+        public async Task<int> UpdateServiceRequestStatusAsync(int serviceRequestId, string serviceRequestStatus)
         {
             try
             {
-                SPCancelServiceRequest parameters = new SPCancelServiceRequest()
+                SPUpdateServiceRequestStatus parameters = new SPUpdateServiceRequestStatus()
+                {
+                    ServiceRequestId = serviceRequestId,
+                    ServiceRequestStatus = serviceRequestStatus
+                };
+
+                using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))
+                {
+                    connection.Open();
+                    return await connection.ExecuteAsync(sql: parameters.GetName(), param: parameters, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<int> CompleteServiceRequestAsync(int serviceRequestId,
+                                                           string serviceRequestStatus,
+                                                           DateTime startDate,
+                                                           DateTime endDate)
+        {
+            try
+            {
+                SPCompleteServiceRequest parameters = new SPCompleteServiceRequest()
                 {
                     ServiceRequestId = serviceRequestId,
                     ServiceRequestStatus = serviceRequestStatus,
+                    StartDate = startDate,
+                    EndDate = endDate
                 };
 
                 using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))

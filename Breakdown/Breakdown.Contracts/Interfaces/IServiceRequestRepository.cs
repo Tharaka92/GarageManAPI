@@ -10,6 +10,7 @@ namespace Breakdown.Contracts.Interfaces
     {
         Task<int> CreateAsync(ServiceRequest serviceRequestToCreate);
         Task<int> GetLatestServiceRequestIdAsync(int partnerId, int customerId, string serviceRequestStatus);
-        Task<int> CancelAsync(int serviceRequestId, string serviceRequestStatus);
+        Task<int> UpdateServiceRequestStatusAsync(int serviceRequestId, string serviceRequestStatus);
+        Task<int> CompleteServiceRequestAsync(int serviceRequestId, string serviceRequestStatus, DateTime startDate, DateTime endDate);
     }
 }

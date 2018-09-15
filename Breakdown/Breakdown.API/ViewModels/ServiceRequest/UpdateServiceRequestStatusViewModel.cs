@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Breakdown.API.ViewModels.ServiceRequest
 {
-    public class CancelServiceRequestViewModel
+    public class UpdateServiceRequestStatusViewModel
     {
         [Required]
         public int ServiceRequestId { get; set; }

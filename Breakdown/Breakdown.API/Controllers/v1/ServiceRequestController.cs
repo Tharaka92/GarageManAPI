@@ -125,8 +125,8 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
-        [HttpPut("api/v1/ServiceRequest/CancelServiceRequest")]
-        public async Task<ActionResult> CancelServiceRequest(CancelServiceRequestViewModel model)
+        [HttpPut("api/v1/ServiceRequest/UpdateServiceRequestStatus")]
+        public async Task<ActionResult> UpdateServiceRequestStatus(UpdateServiceRequestStatusViewModel model)
         {
             if (model == null)
             {
@@ -149,7 +149,57 @@ namespace Breakdown.API.Controllers.v1
                     });
                 }
 
-                int affectedRows = await _serviceRequestRepository.CancelAsync(model.ServiceRequestId, model.ServiceRequestStatus);
+                int affectedRows = await _serviceRequestRepository.UpdateServiceRequestStatusAsync(model.ServiceRequestId, model.ServiceRequestStatus);
+                if (affectedRows <= 0)
+                {
+                    return StatusCode(StatusCodes.Status417ExpectationFailed, new
+                    {
+                        IsSucceeded = false,
+                        Response = ResponseConstants.CancelFailed
+                    });
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
+            }
+        }
+
+        [HttpPut("api/v1/ServiceRequest/CompleteServiceRequest")]
+        public async Task<ActionResult> CompleteServiceRequest(CompleteServiceRequestViewModel model)
+        {
+            if (model == null)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.RequestContentNull });
+            }
+
+            if (model.ServiceRequestId <= 0)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.InvalidData });
+            }
+
+            try
+            {
+                if (!TryValidateModel(model))
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, new
+                    {
+                        IsSucceeded = false,
+                        Response = ResponseConstants.ValidationFailure
+                    });
+                }
+
+                int affectedRows = await _serviceRequestRepository.CompleteServiceRequestAsync(model.ServiceRequestId,
+                                                                                               model.ServiceRequestStatus,
+                                                                                               model.StartDate,
+                                                                                               model.EndDate);
                 if (affectedRows <= 0)
                 {
                     return StatusCode(StatusCodes.Status417ExpectationFailed, new

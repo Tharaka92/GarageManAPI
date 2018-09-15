@@ -45,16 +45,36 @@ END$$
 DELIMITER $$
 
 -- ----------------------------------------------------------------------------
--- Routine SPCancelServiceRequest
+-- Routine SPUpdateServiceRequestStatus
 -- ----------------------------------------------------------------------------
 
 DELIMITER $$
-CREATE PROCEDURE `SPCancelServiceRequest`(
+CREATE PROCEDURE `SPUpdateServiceRequestStatus`(
 ServiceRequestId  int,
 ServiceRequestStatus varchar(100))
 BEGIN
  UPDATE ServiceRequests SET 
 	ServiceRequests.ServiceRequestStatus = ServiceRequestStatus
+ WHERE ServiceRequests.ServiceRequestId = ServiceRequestId; 
+END$$
+DELIMITER $$
+
+-- ----------------------------------------------------------------------------
+-- Routine SPCompleteServiceRequest
+-- ----------------------------------------------------------------------------
+
+DELIMITER $$
+CREATE PROCEDURE `SPCompleteServiceRequest`(
+ServiceRequestId  int,
+ServiceRequestStatus varchar(100),
+StartDate datetime,
+EndDate datetime)
+BEGIN
+ UPDATE ServiceRequests SET 
+	ServiceRequests.ServiceRequestStatus = ServiceRequestStatus,
+	ServiceRequests.StartDate = StartDate,
+	ServiceRequests.EndDate = EndDate,
+	ServiceRequests.IsCompleted = 1
  WHERE ServiceRequests.ServiceRequestId = ServiceRequestId; 
 END$$
 DELIMITER $$
