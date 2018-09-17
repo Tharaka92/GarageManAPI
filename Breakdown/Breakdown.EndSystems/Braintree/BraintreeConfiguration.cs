@@ -30,6 +30,11 @@ namespace Breakdown.EndSystems.Braintree
             BraintreeGateway = new BraintreeGateway(Environment, MerchantId, PublicKey, PrivateKey);
         }
 
+        public async Task<string> GenerateToken()
+        {
+            return await BraintreeGateway.ClientToken.GenerateAsync();
+        }
+
         public async Task<Result<Transaction>> CreateSale(string nonceFromTheClient, decimal price)
         {
             if (price > 0)
@@ -50,11 +55,6 @@ namespace Breakdown.EndSystems.Braintree
             {
                 return null;
             }
-        }
-
-        public async Task<string> GenerateToken()
-        {
-            return await BraintreeGateway.ClientToken.GenerateAsync();
         }
     }
 }

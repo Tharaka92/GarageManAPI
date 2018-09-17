@@ -26,7 +26,7 @@ namespace Breakdown.API.Controllers.v1
         {
             try
             {
-                return StatusCode(StatusCodes.Status200OK, await _braintreeConfig.GenerateToken());
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Token = await _braintreeConfig.GenerateToken() });
             }
             catch (Exception ex)
             {
@@ -53,7 +53,7 @@ namespace Breakdown.API.Controllers.v1
                     });
                 }
 
-                return StatusCode(StatusCodes.Status200OK, await _braintreeConfig.CreateSale(model.Nonce, model.Amount));
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Message = await _braintreeConfig.CreateSale(model.Nonce, model.Amount) });
             }
             catch (Exception ex)
             {
