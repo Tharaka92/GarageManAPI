@@ -38,5 +38,7 @@ namespace Breakdown.API.Constants
         public static string DeleteFailed = "Failed to Delete.";
 
         public static string CancelFailed = "Failed to Cancel.";
+
+        public static string BraintreeCheckoutFailed = "Failed to process payment.";
     }
 }

@@ -123,5 +123,34 @@ namespace Breakdown.EndSystems.MySql.Repositories
                 throw ex;
             }
         }
+
+        public async Task<int> UpdatePaymentDetailsAsync(int serviceRequestId,
+                                                   decimal totalAmount,
+                                                   decimal packagePrice,
+                                                   decimal tipAmount,
+                                                   string paymentStatus)
+        {
+            try
+            {
+                SPUpdatePaymentDetails parameters = new SPUpdatePaymentDetails()
+                {
+                    ServiceRequestId = serviceRequestId,
+                    TotalAmount = totalAmount,
+                    PackagePrice = packagePrice,
+                    TipAmount = tipAmount,
+                    PaymentStatus = paymentStatus
+                };
+
+                using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))
+                {
+                    connection.Open();
+                    return await connection.ExecuteAsync(sql: parameters.GetName(), param: parameters, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

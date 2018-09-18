@@ -6,6 +6,7 @@ using Breakdown.API.Constants;
 using Breakdown.API.ViewModels.Payment;
 using Breakdown.Contracts.Braintree;
 using Breakdown.Contracts.DTOs;
+using Breakdown.Contracts.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,10 +16,12 @@ namespace Breakdown.API.Controllers.v1
     public class PaymentController : ControllerBase
     {
         private readonly IBraintreeConfiguration _braintreeConfig;
+        private readonly IServiceRequestRepository _serviceRequestRepository;
 
-        public PaymentController(IBraintreeConfiguration braintreeConfig)
+        public PaymentController(IBraintreeConfiguration braintreeConfig, IServiceRequestRepository serviceRequestRepository)
         {
             _braintreeConfig = braintreeConfig;
+            _serviceRequestRepository = serviceRequestRepository;
         }
 
         [HttpGet("api/v1/Payment/GetToken")]
@@ -30,7 +33,11 @@ namespace Breakdown.API.Controllers.v1
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
             }
         }
 
@@ -53,11 +60,27 @@ namespace Breakdown.API.Controllers.v1
                     });
                 }
 
-                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Message = await _braintreeConfig.CreateSale(model.Nonce, model.Amount) });
+                var transactionResult = await _braintreeConfig.CreateSale(model.Nonce, model.TotalAmount);
+                if (!transactionResult.IsSuccess())
+                {
+                    return StatusCode(StatusCodes.Status417ExpectationFailed, new { IsSucceeded = false, Response = ResponseConstants.BraintreeCheckoutFailed });
+                }
+
+                await _serviceRequestRepository.UpdatePaymentDetailsAsync(model.ServiceRequestId,
+                                                                          model.TotalAmount,
+                                                                          model.PackagePrice,
+                                                                          model.TipAmount,
+                                                                          model.PaymentStatus);
+
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
             }
         }
     }

@@ -1,28 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace Breakdown.API.ViewModels.Payment
+namespace Breakdown.EndSystems.MySql.StoredProcedures
 {
-    public class CheckoutViewModel
+    public class SPUpdatePaymentDetails : SP
     {
-        [Required]
         public int ServiceRequestId { get; set; }
 
-        [Required]
-        public string Nonce { get; set; }
-
-        [Required]
         public decimal TotalAmount { get; set; }
 
-        [Required]
         public decimal PackagePrice { get; set; }
 
         public decimal TipAmount { get; set; }
 
-        [Required]
         public string PaymentStatus { get; set; }
     }
 }

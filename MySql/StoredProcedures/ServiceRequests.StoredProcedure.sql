@@ -80,6 +80,27 @@ END$$
 DELIMITER $$
 
 -- ----------------------------------------------------------------------------
+-- Routine SPUpdatePaymentDetails
+-- ----------------------------------------------------------------------------
+
+DELIMITER $$
+CREATE PROCEDURE `SPUpdatePaymentDetails`(
+ServiceRequestId  int,
+TotalAmount decimal,
+PackagePrice decimal,
+TipAmount decimal,
+PaymentStatus varchar(50))
+BEGIN
+ UPDATE ServiceRequests SET 
+	ServiceRequests.TotalAmount = TotalAmount,
+	ServiceRequests.PackagePrice = PackagePrice,
+	ServiceRequests.TipAmount = TipAmount,
+	ServiceRequests.PaymentStatus = PaymentStatus
+ WHERE ServiceRequests.ServiceRequestId = ServiceRequestId; 
+END$$
+DELIMITER $$
+
+-- ----------------------------------------------------------------------------
 -- Routine SPDeleteVehicleType
 -- ----------------------------------------------------------------------------
 

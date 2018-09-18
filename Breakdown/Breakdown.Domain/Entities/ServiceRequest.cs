@@ -36,6 +36,12 @@ namespace Breakdown.Domain.Entities
 
         public bool IsCompleted { get; set; }
 
+        public decimal TotalAmount { get; set; }
+
+        public decimal PackagePrice { get; set; }
+
+        public decimal TipAmount { get; set; }
+
         public ApplicationUser Customer { get; set; }
 
         public ApplicationUser Partner { get; set; }

@@ -12,5 +12,6 @@ namespace Breakdown.Contracts.Interfaces
         Task<int> GetLatestServiceRequestIdAsync(int partnerId, int customerId, string serviceRequestStatus);
         Task<int> UpdateServiceRequestStatusAsync(int serviceRequestId, string serviceRequestStatus);
         Task<int> CompleteServiceRequestAsync(int serviceRequestId, string serviceRequestStatus, DateTime startDate, DateTime endDate);
+        Task<int> UpdatePaymentDetailsAsync(int serviceRequestId, decimal totalAmount, decimal packagePrice, decimal tipAmount, string paymentStatus);
     }
 }
