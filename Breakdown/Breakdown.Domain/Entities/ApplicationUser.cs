@@ -22,6 +22,8 @@ namespace Breakdown.Domain.Entities
         [StringLength(1000)]
         public string ProfileImageUrl { get; set; }
 
+        public double AverageRating { get; set; }
+
         public Service Service { get; set; }
 
         [InverseProperty("Customer")]

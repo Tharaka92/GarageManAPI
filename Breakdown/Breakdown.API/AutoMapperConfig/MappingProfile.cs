@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Breakdown.API.ViewModels;
 using Breakdown.API.ViewModels.Package;
+using Breakdown.API.ViewModels.Rating;
 using Breakdown.API.ViewModels.Service;
 using Breakdown.API.ViewModels.ServiceRequest;
 using Breakdown.API.ViewModels.VehicleType;
@@ -30,6 +31,8 @@ namespace Breakdown.API.AutoMapperConfig
             CreateMap<VehicleType, VehicleTypeUpdateViewModel>().ReverseMap();
 
             CreateMap<ServiceRequest, ServiceRequestPostViewModel>().ReverseMap();
+
+            CreateMap<Rating, RatingPostViewModel>().ReverseMap();
         }
     }
 }

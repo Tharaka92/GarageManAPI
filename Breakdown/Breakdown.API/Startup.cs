@@ -56,6 +56,7 @@ namespace Breakdown.API
             services.AddTransient<IServiceRepository, ServiceRepository>();
             services.AddTransient<IVehicleTypeRepository, VehicleTypeRepository>();
             services.AddTransient<IServiceRequestRepository, ServiceRequestRepository>();
+            services.AddTransient<IRatingRepository, RatingRepository>();
 
             // ===== Add Jwt Authentication ========
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
