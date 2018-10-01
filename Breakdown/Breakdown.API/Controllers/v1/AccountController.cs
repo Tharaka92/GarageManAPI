@@ -182,11 +182,9 @@ namespace Breakdown.API.Controllers.v1
 
                 UserProfileResponseViewModel userProfileResponseVm = new UserProfileResponseViewModel
                 {
-                    UserId = appUser.Id,
                     Name = appUser.Name,
                     Email = appUser.Email,
                     PhoneNumber = appUser.PhoneNumber,
-                    Country = appUser.Country,
                     VehicleNumber = appUser.VehicleNumber,
                     ProfileImageUrl = appUser.ProfileImageUrl,
                     AverageRating = appUser.AverageRating
