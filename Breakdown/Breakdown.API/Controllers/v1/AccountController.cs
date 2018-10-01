@@ -67,7 +67,7 @@ namespace Breakdown.API.Controllers.v1
                     });
                 }
 
-                var appUser = await _userManager.Users.Include(u => u.Service).SingleAsync(u => u.Email == model.Email);
+                var appUser = await _userManager.Users.Include(u => u.Service).SingleOrDefaultAsync(u => u.Email == model.Email);
                 var roles = await _userManager.GetRolesAsync(appUser);
 
                 LoginResponseViewModel loginResponse = new LoginResponseViewModel
@@ -81,7 +81,8 @@ namespace Breakdown.API.Controllers.v1
                     Token = TokenFactory.GenerateJwtToken(model.Email, appUser, _configuration),
                     RoleName = roles.FirstOrDefault(),
                     ProfileImageUrl = appUser.ProfileImageUrl,
-                    VehicleNumber = appUser.VehicleNumber
+                    VehicleNumber = appUser.VehicleNumber,
+                    AverageRating = appUser.AverageRating
                 };
 
                 if (appUser.Service != null)
@@ -151,8 +152,47 @@ namespace Breakdown.API.Controllers.v1
                     await _userManager.AddToRoleAsync(user, model.RoleName);
                 }
 
-                await _signInManager.SignInAsync(user, false);
                 return StatusCode(StatusCodes.Status201Created, new { IsSucceeded = result.Succeeded });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
+            }
+        }
+
+        [HttpGet("api/v1/Account/GetProfileData/{userId:int}")]
+        public async Task<IActionResult> GetProfileData(int userId)
+        {
+            if (userId <= 0)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.InvalidData });
+            }
+
+            try
+            {
+                var appUser = await _userManager.Users.Where(u => u.Id == userId).SingleOrDefaultAsync();
+                if (appUser == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new { IsSucceeded = false, Response = ResponseConstants.NotFound });
+                }
+
+                UserProfileResponseViewModel userProfileResponseVm = new UserProfileResponseViewModel
+                {
+                    UserId = appUser.Id,
+                    Name = appUser.Name,
+                    Email = appUser.Email,
+                    PhoneNumber = appUser.PhoneNumber,
+                    Country = appUser.Country,
+                    VehicleNumber = appUser.VehicleNumber,
+                    ProfileImageUrl = appUser.ProfileImageUrl,
+                    AverageRating = appUser.AverageRating
+                };
+
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Response = userProfileResponseVm });
             }
             catch (Exception ex)
             {
