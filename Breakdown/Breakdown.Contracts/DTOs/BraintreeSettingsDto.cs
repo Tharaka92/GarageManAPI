@@ -10,5 +10,6 @@ namespace Breakdown.Contracts.DTOs
         public string BraintreeMerchantId { get; set; }
         public string BraintreePublicKey { get; set; }
         public string BraintreePrivateKey { get; set; }
+        public string BraintreeMerchantAccountId { get; set; }
     }
 }
