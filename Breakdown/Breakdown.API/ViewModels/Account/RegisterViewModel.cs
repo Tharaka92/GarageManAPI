@@ -26,6 +26,8 @@ namespace Breakdown.API.ViewModels.Account
         [Required]
         public string PhoneNumber { get; set; }
 
+        public string VehicleNumber { get; set; }
+
         [Required]
         public string RoleName { get; set; }
     }

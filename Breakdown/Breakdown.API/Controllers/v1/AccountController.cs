@@ -132,6 +132,7 @@ namespace Breakdown.API.Controllers.v1
                     Name = model.Name,
                     Country = model.Country,
                     PhoneNumber = model.PhoneNumber,
+                    VehicleNumber = model.VehicleNumber,
                     UserName = model.Email,
                     Email = model.Email,
                     ServiceId = model.ServiceId
