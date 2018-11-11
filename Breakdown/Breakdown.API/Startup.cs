@@ -134,6 +134,7 @@ namespace Breakdown.API
                 app.UseHsts();
             }
 
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseSwagger();

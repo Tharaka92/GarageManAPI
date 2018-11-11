@@ -135,7 +135,8 @@ namespace Breakdown.API.Controllers.v1
                     VehicleNumber = model.VehicleNumber,
                     UserName = model.Email,
                     Email = model.Email,
-                    ServiceId = model.ServiceId
+                    ServiceId = model.ServiceId,
+                    ProfileImageUrl = Request.Scheme + "://" + Request.Host + Request.PathBase + "/images/defaultprofile.jpg"
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
