@@ -24,6 +24,14 @@ namespace Breakdown.Domain.Entities
 
         public double AverageRating { get; set; }
 
+        public bool IsApproved { get; set; }
+
+        public bool IsBlocked { get; set; }
+
+        public bool HasAPaymentMethod { get; set; }
+
+        public bool HasADuePayment { get; set; }
+
         public Service Service { get; set; }
 
         [InverseProperty("Customer")]

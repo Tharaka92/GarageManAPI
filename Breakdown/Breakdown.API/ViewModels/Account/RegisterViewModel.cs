@@ -30,5 +30,7 @@ namespace Breakdown.API.ViewModels.Account
 
         [Required]
         public string RoleName { get; set; }
+
+        public bool IsApproved { get; set; }
     }
 }

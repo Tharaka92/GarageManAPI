@@ -82,7 +82,11 @@ namespace Breakdown.API.Controllers.v1
                     RoleName = roles.FirstOrDefault(),
                     ProfileImageUrl = appUser.ProfileImageUrl,
                     VehicleNumber = appUser.VehicleNumber,
-                    AverageRating = appUser.AverageRating
+                    AverageRating = appUser.AverageRating,
+                    IsApproved = appUser.IsApproved,
+                    IsBlocked = appUser.IsBlocked,
+                    HasAPaymentMethod = appUser.HasAPaymentMethod,
+                    HasADuePayment = appUser.HasADuePayment
                 };
 
                 if (appUser.Service != null)
@@ -136,7 +140,8 @@ namespace Breakdown.API.Controllers.v1
                     UserName = model.Email,
                     Email = model.Email,
                     ServiceId = model.ServiceId,
-                    ProfileImageUrl = Request.Scheme + "://" + Request.Host + Request.PathBase + "/images/defaultprofile.jpg"
+                    ProfileImageUrl = Request.Scheme + "://" + Request.Host + Request.PathBase + "/images/defaultprofile.jpg",
+                    IsApproved = model.IsApproved
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -189,7 +194,11 @@ namespace Breakdown.API.Controllers.v1
                     PhoneNumber = appUser.PhoneNumber,
                     VehicleNumber = appUser.VehicleNumber,
                     ProfileImageUrl = appUser.ProfileImageUrl,
-                    AverageRating = appUser.AverageRating
+                    AverageRating = appUser.AverageRating,
+                    IsApproved = appUser.IsApproved,
+                    IsBlocked = appUser.IsBlocked,
+                    HasAPaymentMethod = appUser.HasAPaymentMethod,
+                    HasADuePayment = appUser.HasADuePayment
                 };
 
                 return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Response = userProfileResponseVm });
