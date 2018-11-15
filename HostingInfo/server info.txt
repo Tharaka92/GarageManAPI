@@ -1,13 +1,13 @@
 AWS EC2 Server Details
 ======================
-Public DNS - ec2-13-229-218-109.ap-southeast-1.compute.amazonaws.com
+Public DNS - ec2-13-229-224-204.ap-southeast-1.compute.amazonaws.com
 User name - Administrator
 IIS site name - api
-Password - p8szAFDm-d3
+Password - -A%e2$uUof
 
 MYSQL RDS Credentials
 =====================
-Endpoint - breakdowndb.cdtg2ser2shu.ap-southeast-1.rds.amazonaws.com
+Endpoint - breakdowndb.clree2uxvh2w.ap-southeast-1.rds.amazonaws.com
 DatabaseName - breakdowndb
 UserId - breakdown_user
 Password - 1qaz2wsx
