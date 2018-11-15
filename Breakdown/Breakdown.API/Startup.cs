@@ -2,7 +2,7 @@
 using Breakdown.API.AutoMapperConfig;
 using Breakdown.API.Hubs;
 using Breakdown.Contracts.Braintree;
-using Breakdown.Contracts.DTOs;
+using Breakdown.Contracts.Options;
 using Breakdown.Contracts.Interfaces;
 using Breakdown.Domain.Entities;
 using Breakdown.Emailer;
@@ -41,9 +41,9 @@ namespace Breakdown.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<ConnectionStringDto>(Configuration.GetSection("ConnectionStrings"));
-            services.Configure<BraintreeSettingsDto>(Configuration.GetSection("BraintreeSettings"));
-            services.Configure<MailSettingDto>(Configuration.GetSection("MailSettings"));
+            services.Configure<ConnectionStringOptions>(Configuration.GetSection("ConnectionStrings"));
+            services.Configure<BraintreeOptions>(Configuration.GetSection("BraintreeOptions"));
+            services.Configure<MailOptions>(Configuration.GetSection("MailOptions"));
 
             // ===== Add DbContext ========
             services.AddDbContext<ApplicationDbContext>();
@@ -64,29 +64,50 @@ namespace Breakdown.API
             services.AddTransient<IServiceRequestRepository, ServiceRequestRepository>();
             services.AddTransient<IRatingRepository, RatingRepository>();
 
-            // ===== Add Jwt Authentication ========
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
+            var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtOptions));
+            SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["JwtKey"]));
 
-            services
-                .AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            services.Configure<JwtOptions>(options =>
+            {
+                options.Issuer = jwtAppSettingOptions[nameof(JwtOptions.Issuer)];
+                options.Audience = jwtAppSettingOptions[nameof(JwtOptions.Audience)];
+                options.SigningCredentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
+            });
 
-                })
-                .AddJwtBearer(cfg =>
-                {
-                    cfg.RequireHttpsMetadata = false;
-                    cfg.SaveToken = true;
-                    cfg.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidIssuer = Configuration["JwtIssuer"],
-                        ValidAudience = Configuration["JwtIssuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
-                        ClockSkew = TimeSpan.Zero
-                    };
-                });
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = jwtAppSettingOptions[nameof(JwtOptions.Issuer)],
+
+                ValidateAudience = true,
+                ValidAudience = jwtAppSettingOptions[nameof(JwtOptions.Audience)],
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = _signingKey,
+
+                RequireExpirationTime = false,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
+            };
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(configureOptions =>
+            {
+                configureOptions.ClaimsIssuer = jwtAppSettingOptions[nameof(JwtOptions.Issuer)];
+                configureOptions.TokenValidationParameters = tokenValidationParameters;
+                configureOptions.SaveToken = true;
+
+                //configureOptions.Events = new JwtBearerEvents
+                //{
+                //    OnTokenValidated = context => JwtExtensions.ValidateToken(context)
+                //};
+            });
 
             services.AddAutoMapper(am => am.AddProfile(new MappingProfile()));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

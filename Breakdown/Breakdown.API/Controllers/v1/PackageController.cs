@@ -6,7 +6,7 @@ using AutoMapper;
 using Breakdown.API.Constants;
 using Breakdown.API.ViewModels;
 using Breakdown.API.ViewModels.Package;
-using Breakdown.Contracts.DTOs;
+using Breakdown.Contracts.Options;
 using Breakdown.Contracts.Interfaces;
 using Breakdown.Domain.Entities;
 using Microsoft.AspNetCore.Http;

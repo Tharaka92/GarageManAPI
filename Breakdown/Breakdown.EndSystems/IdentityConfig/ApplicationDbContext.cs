@@ -1,4 +1,4 @@
-﻿using Breakdown.Contracts.DTOs;
+﻿using Breakdown.Contracts.Options;
 using Breakdown.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -10,9 +10,9 @@ namespace Breakdown.EndSystems.IdentityConfig
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
     {
-        private readonly IOptions<ConnectionStringDto> _connectionString;
+        private readonly IOptions<ConnectionStringOptions> _connectionString;
 
-        public ApplicationDbContext(IOptions<ConnectionStringDto> connectionString)
+        public ApplicationDbContext(IOptions<ConnectionStringOptions> connectionString)
         {
             _connectionString = connectionString;
         }

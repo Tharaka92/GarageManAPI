@@ -1,5 +1,5 @@
 ﻿using Breakdown.Contracts.Interfaces;
-using Breakdown.Contracts.DTOs;
+using Breakdown.Contracts.Options;
 using Breakdown.Domain.Entities;
 using Breakdown.EndSystems.MySql.StoredProcedures;
 using Dapper;
@@ -16,9 +16,9 @@ namespace Breakdown.EndSystems.MySql.Repositories
 {
     public class PackageRepository : IPackageRepository
     {
-        private readonly IOptions<ConnectionStringDto> _connectionString;
+        private readonly IOptions<ConnectionStringOptions> _connectionString;
 
-        public PackageRepository(IOptions<ConnectionStringDto> connectionString)
+        public PackageRepository(IOptions<ConnectionStringOptions> connectionString)
         {
             _connectionString = connectionString;
         }

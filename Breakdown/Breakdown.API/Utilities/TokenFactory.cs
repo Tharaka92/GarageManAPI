@@ -1,4 +1,5 @@
 ﻿
+using Breakdown.Contracts.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -13,26 +14,22 @@ namespace Breakdown.API.Utilities
 {
     public static class TokenFactory
     {
-        public static string GenerateJwtToken(string email, IdentityUser<int> user, IConfiguration configuration)
+        public static async Task<string> GenerateJwtToken(string email, IdentityUser<int> user, IConfiguration configuration, JwtOptions jwtOptions)
         {
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, await jwtOptions.JtiGenerator()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtKey"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(Convert.ToDouble(configuration["JwtExpireDays"]));
-
-            var token = new JwtSecurityToken(
-                configuration["JwtIssuer"],
-                configuration["JwtIssuer"],
-                claims,
-                expires: expires,
-                signingCredentials: creds
-            );
+             var token = new JwtSecurityToken(
+                issuer: jwtOptions.Issuer,
+                audience: jwtOptions.Audience,
+                claims: claims,
+                notBefore: jwtOptions.NotBefore,
+                expires: jwtOptions.Expiration,
+                signingCredentials: jwtOptions.SigningCredentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }

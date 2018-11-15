@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Breakdown.API.Constants;
 using Breakdown.API.ViewModels.Payment;
 using Breakdown.Contracts.Braintree;
-using Breakdown.Contracts.DTOs;
+using Breakdown.Contracts.Options;
 using Breakdown.Contracts.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

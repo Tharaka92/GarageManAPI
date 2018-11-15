@@ -1,6 +1,6 @@
 ﻿using Braintree;
 using Breakdown.Contracts.Braintree;
-using Breakdown.Contracts.DTOs;
+using Breakdown.Contracts.Options;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace Breakdown.EndSystems.Braintree
 {
     public class BraintreeConfiguration : IBraintreeConfiguration
     {
-        private readonly IOptions<BraintreeSettingsDto> _braintreeSettings;
+        private readonly IOptions<BraintreeOptions> _braintreeOptions;
         private BraintreeGateway BraintreeGateway;
         private string Environment { get; set; }
         private string MerchantId { get; set; }
@@ -19,15 +19,15 @@ namespace Breakdown.EndSystems.Braintree
         private string PrivateKey { get; set; }
         public string BraintreeMerchantAccountId { get; set; }
 
-        public BraintreeConfiguration(IOptions<BraintreeSettingsDto> braintreeSettings)
+        public BraintreeConfiguration(IOptions<BraintreeOptions> braintreeOptions)
         {
-            _braintreeSettings = braintreeSettings;
+            _braintreeOptions = braintreeOptions;
 
-            Environment = _braintreeSettings.Value.BraintreeEnvironment;
-            MerchantId = _braintreeSettings.Value.BraintreeMerchantId;
-            PublicKey = _braintreeSettings.Value.BraintreePublicKey;
-            PrivateKey = _braintreeSettings.Value.BraintreePrivateKey;
-            BraintreeMerchantAccountId = _braintreeSettings.Value.BraintreeMerchantAccountId;
+            Environment = _braintreeOptions.Value.BraintreeEnvironment;
+            MerchantId = _braintreeOptions.Value.BraintreeMerchantId;
+            PublicKey = _braintreeOptions.Value.BraintreePublicKey;
+            PrivateKey = _braintreeOptions.Value.BraintreePrivateKey;
+            BraintreeMerchantAccountId = _braintreeOptions.Value.BraintreeMerchantAccountId;
 
             BraintreeGateway = new BraintreeGateway(Environment, MerchantId, PublicKey, PrivateKey);
         }

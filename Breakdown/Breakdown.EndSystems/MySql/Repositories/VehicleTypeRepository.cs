@@ -1,4 +1,4 @@
-﻿using Breakdown.Contracts.DTOs;
+﻿using Breakdown.Contracts.Options;
 using Breakdown.Contracts.Interfaces;
 using Breakdown.Domain.Entities;
 using Breakdown.EndSystems.MySql.StoredProcedures;
@@ -15,9 +15,9 @@ namespace Breakdown.EndSystems.MySql.Repositories
 {
     public class VehicleTypeRepository : IVehicleTypeRepository
     {
-        private readonly IOptions<ConnectionStringDto> _connectionString;
+        private readonly IOptions<ConnectionStringOptions> _connectionString;
 
-        public VehicleTypeRepository(IOptions<ConnectionStringDto> connectionString)
+        public VehicleTypeRepository(IOptions<ConnectionStringOptions> connectionString)
         {
             _connectionString = connectionString;
         }

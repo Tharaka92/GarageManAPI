@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using Breakdown.Contracts.DTOs;
+using Breakdown.Contracts.Options;
 using Breakdown.API.Utilities;
 using Breakdown.Domain.Entities;
 using System.Net;
@@ -14,6 +14,7 @@ using System.Net.Http;
 using Breakdown.API.ViewModels.Account;
 using Microsoft.EntityFrameworkCore;
 using Breakdown.API.Constants;
+using Microsoft.Extensions.Options;
 
 namespace Breakdown.API.Controllers.v1
 {
@@ -24,18 +25,20 @@ namespace Breakdown.API.Controllers.v1
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole<int>> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly JwtOptions _jwtOptions;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             RoleManager<IdentityRole<int>> roleManager,
-            IConfiguration configuration
-            )
+            IConfiguration configuration,
+            IOptions<JwtOptions> jwtOptions)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _jwtOptions = jwtOptions.Value;
         }
 
         [HttpPost("api/v1/Account/Login")]
@@ -78,7 +81,7 @@ namespace Breakdown.API.Controllers.v1
                     Email = appUser.Email,
                     Country = appUser.Country,
                     PhoneNumber = appUser.PhoneNumber,
-                    Token = TokenFactory.GenerateJwtToken(model.Email, appUser, _configuration),
+                    Token = await TokenFactory.GenerateJwtToken(model.Email, appUser, _configuration, _jwtOptions),
                     RoleName = roles.FirstOrDefault(),
                     ProfileImageUrl = appUser.ProfileImageUrl,
                     VehicleNumber = appUser.VehicleNumber,

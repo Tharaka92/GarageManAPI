@@ -1,4 +1,4 @@
-﻿using Breakdown.Contracts.DTOs;
+﻿using Breakdown.Contracts.Options;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -10,10 +10,10 @@ namespace Breakdown.Emailer
 {
     public class MailClient : IMailClient
     {
-        private readonly MailSettingDto _mailSettings;
-        public MailClient(IOptions<MailSettingDto> mailSettings)
+        private readonly MailOptions _mailOptions;
+        public MailClient(IOptions<MailOptions> mailOptions)
         {
-            _mailSettings = mailSettings.Value;
+            _mailOptions = mailOptions.Value;
         }
 
         public async void Send(string subject, string body, List<string> to)
@@ -22,7 +22,7 @@ namespace Breakdown.Emailer
             {
                 MailMessage mail = new MailMessage()
                 {
-                    From = new MailAddress(_mailSettings.SenderEmail, _mailSettings.SenderEmail)
+                    From = new MailAddress(_mailOptions.SenderEmail, _mailOptions.SenderEmail)
                 };
 
                 foreach (string address in to)
@@ -35,9 +35,9 @@ namespace Breakdown.Emailer
                 mail.IsBodyHtml = true;
                 mail.Priority = MailPriority.High;
 
-                using (SmtpClient smtp = new SmtpClient(_mailSettings.SmtpUrl, _mailSettings.Port))
+                using (SmtpClient smtp = new SmtpClient(_mailOptions.SmtpUrl, _mailOptions.Port))
                 {
-                    smtp.Credentials = new NetworkCredential(_mailSettings.SenderEmail, _mailSettings.SenderPassword);
+                    smtp.Credentials = new NetworkCredential(_mailOptions.SenderEmail, _mailOptions.SenderPassword);
                     smtp.EnableSsl = true;
                     await smtp.SendMailAsync(mail);
                 }

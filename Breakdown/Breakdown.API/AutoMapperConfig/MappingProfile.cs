@@ -5,7 +5,7 @@ using Breakdown.API.ViewModels.Rating;
 using Breakdown.API.ViewModels.Service;
 using Breakdown.API.ViewModels.ServiceRequest;
 using Breakdown.API.ViewModels.VehicleType;
-using Breakdown.Contracts.DTOs;
+using Breakdown.Contracts.Options;
 using Breakdown.Domain.Entities;
 using System;
 using System.Collections.Generic;

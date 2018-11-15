@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Breakdown.Contracts.DTOs
+namespace Breakdown.Contracts.Options
 {
-    public class ConnectionStringDto
+    public class ConnectionStringOptions
     {
         public string BreakdownDb { get; set; }
     }

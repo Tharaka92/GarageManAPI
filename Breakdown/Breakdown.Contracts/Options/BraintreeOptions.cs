@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Breakdown.Contracts.DTOs
+namespace Breakdown.Contracts.Options
 {
-    public class BraintreeSettingsDto
+    public class BraintreeOptions
     {
         public string BraintreeEnvironment { get; set; }
         public string BraintreeMerchantId { get; set; }
