@@ -39,5 +39,6 @@ namespace Breakdown.EndSystems.IdentityConfig
         public DbSet<ServiceRequest> ServiceRequests { get; set; }
         public DbSet<VehicleType> VehicleTypes { get; set; }
         public DbSet<Rating> Ratings { get; set; }
+        public DbSet<ExpiredToken> ExpiredTokens { get; set; }
     }
 }

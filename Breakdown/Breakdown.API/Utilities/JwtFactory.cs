@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Breakdown.API.Utilities
 {
-    public static class TokenFactory
+    public static class JwtFactory
     {
         public static async Task<string> GenerateJwtToken(string email, IdentityUser<int> user, IConfiguration configuration, JwtOptions jwtOptions)
         {

@@ -15,6 +15,10 @@ using Breakdown.API.ViewModels.Account;
 using Microsoft.EntityFrameworkCore;
 using Breakdown.API.Constants;
 using Microsoft.Extensions.Options;
+using Breakdown.Contracts.Interfaces;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Breakdown.API.Controllers.v1
 {
@@ -26,19 +30,22 @@ namespace Breakdown.API.Controllers.v1
         private readonly RoleManager<IdentityRole<int>> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly JwtOptions _jwtOptions;
+        private readonly IExpiredTokenRepository _expiredTokenRepository;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             RoleManager<IdentityRole<int>> roleManager,
             IConfiguration configuration,
-            IOptions<JwtOptions> jwtOptions)
+            IOptions<JwtOptions> jwtOptions,
+            IExpiredTokenRepository expiredTokenRepository)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
             _jwtOptions = jwtOptions.Value;
+            _expiredTokenRepository = expiredTokenRepository;
         }
 
         [HttpPost("api/v1/Account/Login")]
@@ -81,7 +88,7 @@ namespace Breakdown.API.Controllers.v1
                     Email = appUser.Email,
                     Country = appUser.Country,
                     PhoneNumber = appUser.PhoneNumber,
-                    Token = await TokenFactory.GenerateJwtToken(model.Email, appUser, _configuration, _jwtOptions),
+                    Token = await JwtFactory.GenerateJwtToken(model.Email, appUser, _configuration, _jwtOptions),
                     RoleName = roles.FirstOrDefault(),
                     ProfileImageUrl = appUser.ProfileImageUrl,
                     VehicleNumber = appUser.VehicleNumber,
@@ -205,6 +212,43 @@ namespace Breakdown.API.Controllers.v1
                 };
 
                 return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Response = userProfileResponseVm });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
+            }
+        }
+
+        [Authorize]
+        [HttpGet("api/v1/Account/Logout")]
+        public async Task<ActionResult> Logout()
+        {
+            try
+            {
+                var authorization = HttpContext.Request.Headers["Authorization"];
+                if (authorization.Count > 0 && !string.IsNullOrWhiteSpace(authorization[0]))
+                {
+                    var authToken = authorization[0].Replace("Bearer ", string.Empty).Trim();
+                    if (!string.IsNullOrWhiteSpace(authToken))
+                    {
+                        var handler = new JwtSecurityTokenHandler();
+                        var jwtToken = handler.ReadToken(authToken) as JwtSecurityToken;
+                        int.TryParse(jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value, out int userId);
+
+                        await _expiredTokenRepository.Create(new ExpiredToken
+                        {
+                            Token = authToken,
+                            ExpiredDate = DateTime.Now,
+                            UserId = userId
+                        });
+                    }
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true });
             }
             catch (Exception ex)
             {

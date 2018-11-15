@@ -26,6 +26,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using Breakdown.API.Utilities;
 
 namespace Breakdown.API
 {
@@ -57,6 +58,7 @@ namespace Breakdown.API
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
             services.AddScoped<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
             services.AddScoped<IMailClient, MailClient>();
+            services.AddScoped<IExpiredTokenRepository, ExpiredTokenRepository>();
             services.AddTransient<IBraintreeConfiguration, BraintreeConfiguration>();
             services.AddTransient<IPackageRepository, PackageRepository>();
             services.AddTransient<IServiceRepository, ServiceRepository>();
@@ -103,10 +105,10 @@ namespace Breakdown.API
                 configureOptions.TokenValidationParameters = tokenValidationParameters;
                 configureOptions.SaveToken = true;
 
-                //configureOptions.Events = new JwtBearerEvents
-                //{
-                //    OnTokenValidated = context => JwtExtensions.ValidateToken(context)
-                //};
+                configureOptions.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = context => JwtExtensions.ValidateToken(context)
+                };
             });
 
             services.AddAutoMapper(am => am.AddProfile(new MappingProfile()));
@@ -119,20 +121,20 @@ namespace Breakdown.API
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
 
-                //var security = new Dictionary<string, IEnumerable<string>>
-                //{
-                //    {"Bearer", new string[] { }},
-                //};
+                var security = new Dictionary<string, IEnumerable<string>>
+                {
+                    {"Bearer", new string[] { }},
+                };
 
-                //c.AddSecurityDefinition("Bearer", new ApiKeyScheme
-                //{
-                //    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                //    Name = "Authorization",
-                //    In = "header",
-                //    Type = "apiKey"
-                //});
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
 
-                //c.AddSecurityRequirement(security);
+                c.AddSecurityRequirement(security);
             });
 
             services.Configure<IdentityOptions>(options =>
