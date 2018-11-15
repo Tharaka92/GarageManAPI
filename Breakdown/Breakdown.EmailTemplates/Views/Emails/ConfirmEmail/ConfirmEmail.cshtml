@@ -1,0 +1,27 @@
+﻿@using Breakdown.EmailTemplates.Views.Emails.ConfirmEmail
+@*@using Breakdown.EmailTemplates.Views.Shared*@
+@model ConfirmEmailViewModel
+
+@{
+    ViewData["EmailTitle"] = "Welcome!";
+}
+
+<p>
+    We're excited to have you on board. First, you need to confirm your email. Just type the code below in your app.
+</p>
+
+<br />
+
+<p>
+    @Model.ConfirmationCode
+</p>
+
+<p>
+    We will contact you with the instruction to get started.
+</p>
+
+<br />
+
+<p>
+    The Fetch Team
+</p>

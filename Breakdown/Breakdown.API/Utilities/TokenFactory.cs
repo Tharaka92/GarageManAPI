@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Breakdown.API.TokenUtilities
+namespace Breakdown.API.Utilities
 {
     public static class TokenFactory
     {

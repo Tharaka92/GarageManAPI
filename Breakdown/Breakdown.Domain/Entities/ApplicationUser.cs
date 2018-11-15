@@ -32,6 +32,8 @@ namespace Breakdown.Domain.Entities
 
         public bool HasADuePayment { get; set; }
 
+        public string VerificationCode { get; set; }
+
         public Service Service { get; set; }
 
         [InverseProperty("Customer")]

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Breakdown.Contracts.DTOs;
-using Breakdown.API.TokenUtilities;
+using Breakdown.API.Utilities;
 using Breakdown.Domain.Entities;
 using System.Net;
 using System.Net.Http;

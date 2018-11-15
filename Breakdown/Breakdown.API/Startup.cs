@@ -5,6 +5,8 @@ using Breakdown.Contracts.Braintree;
 using Breakdown.Contracts.DTOs;
 using Breakdown.Contracts.Interfaces;
 using Breakdown.Domain.Entities;
+using Breakdown.Emailer;
+using Breakdown.EmailTemplates.Services;
 using Breakdown.EndSystems.Braintree;
 using Breakdown.EndSystems.IdentityConfig;
 using Breakdown.EndSystems.MySql.Repositories;
@@ -41,6 +43,7 @@ namespace Breakdown.API
         {
             services.Configure<ConnectionStringDto>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<BraintreeSettingsDto>(Configuration.GetSection("BraintreeSettings"));
+            services.Configure<MailSettingDto>(Configuration.GetSection("MailSettings"));
 
             // ===== Add DbContext ========
             services.AddDbContext<ApplicationDbContext>();
@@ -52,6 +55,8 @@ namespace Breakdown.API
 
             // ===== Add DI ========
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
+            services.AddScoped<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
+            services.AddScoped<IMailClient, MailClient>();
             services.AddTransient<IBraintreeConfiguration, BraintreeConfiguration>();
             services.AddTransient<IPackageRepository, PackageRepository>();
             services.AddTransient<IServiceRepository, ServiceRepository>();

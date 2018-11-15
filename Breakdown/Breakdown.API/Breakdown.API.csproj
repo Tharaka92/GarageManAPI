@@ -30,6 +30,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Breakdown.Contracts\Breakdown.Contracts.csproj" />
+    <ProjectReference Include="..\Breakdown.Emailer\Breakdown.Emailer.csproj" />
+    <ProjectReference Include="..\Breakdown.EmailTemplates\Breakdown.EmailTemplates.csproj" />
     <ProjectReference Include="..\Breakdown.EndSystems\Breakdown.EndSystems.csproj" />
   </ItemGroup>
 
