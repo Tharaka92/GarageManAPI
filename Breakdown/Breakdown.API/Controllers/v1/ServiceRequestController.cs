@@ -7,6 +7,7 @@ using Breakdown.API.Constants;
 using Breakdown.API.ViewModels.ServiceRequest;
 using Breakdown.Contracts.Interfaces;
 using Breakdown.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +25,7 @@ namespace Breakdown.API.Controllers.v1
             _serviceRequestRepository = serviceRequestRepository;
         }
 
+        [Authorize]
         [HttpGet("api/v1/ServiceRequest/GetLatestServiceRequestId")]
         public async Task<ActionResult> GetLatestServiceRequestId(int partnerId, int customerId, string serviceRequestStatus)
         {
@@ -62,6 +64,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [Authorize]
         [HttpPost("api/v1/ServiceRequest")]
         public async Task<ActionResult> Create(ServiceRequestPostViewModel model)
         {
@@ -125,6 +128,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [Authorize]
         [HttpPut("api/v1/ServiceRequest/UpdateServiceRequestStatus")]
         public async Task<ActionResult> UpdateServiceRequestStatus(UpdateServiceRequestStatusViewModel model)
         {
@@ -172,6 +176,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [Authorize]
         [HttpPut("api/v1/ServiceRequest/CompleteServiceRequest")]
         public async Task<ActionResult> CompleteServiceRequest(CompleteServiceRequestViewModel model)
         {

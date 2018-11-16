@@ -181,6 +181,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [Authorize]
         [HttpGet("api/v1/Account/GetProfileData/{userId:int}")]
         public async Task<IActionResult> GetProfileData(int userId)
         {

@@ -9,6 +9,7 @@ using Breakdown.Contracts.Options;
 using Breakdown.Contracts.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Breakdown.API.Controllers.v1
 {
@@ -24,6 +25,7 @@ namespace Breakdown.API.Controllers.v1
             _serviceRequestRepository = serviceRequestRepository;
         }
 
+        [Authorize]
         [HttpGet("api/v1/Payment/GetToken")]
         public async Task<IActionResult> GetToken()
         {
@@ -41,6 +43,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [Authorize]
         [HttpPost("api/v1/Payment/Checkout")]
         public async Task<IActionResult> Checkout(CheckoutViewModel model)
         {

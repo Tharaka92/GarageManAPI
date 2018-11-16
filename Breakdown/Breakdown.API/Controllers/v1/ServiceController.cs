@@ -8,6 +8,7 @@ using Breakdown.API.ViewModels;
 using Breakdown.API.ViewModels.Service;
 using Breakdown.Contracts.Interfaces;
 using Breakdown.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,6 +28,7 @@ namespace Breakdown.API.Controllers.v1
             _serviceRepository = serviceRepository;
         }
 
+        [Authorize]
         [HttpGet("api/v1/Service")]
         public async Task<ActionResult> Get()
         {
@@ -51,6 +53,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [Authorize]
         [HttpGet("api/v1/Service/{serviceId:int}")]
         public async Task<ActionResult> GetById(int serviceId)
         {
@@ -80,6 +83,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [Authorize]
         [HttpPost("api/v1/Service")]
         public async Task<ActionResult> Create(ServiceBaseViewModel model)
         {
@@ -122,6 +126,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [Authorize]
         [HttpPut("api/v1/Service")]
         public async Task<ActionResult> Update(ServiceUpdateViewModel model)
         {
@@ -164,6 +169,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [Authorize]
         [HttpDelete("api/v1/Service/{serviceId:int}")]
         public async Task<ActionResult> Delete(int serviceId)
         {

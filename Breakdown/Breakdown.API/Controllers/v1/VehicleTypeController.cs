@@ -7,6 +7,7 @@ using Breakdown.API.Constants;
 using Breakdown.API.ViewModels.VehicleType;
 using Breakdown.Contracts.Interfaces;
 using Breakdown.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +25,7 @@ namespace Breakdown.API.Controllers.v1
             _vehicleTypeRepository = vehicleTypeRepository;
         }
 
+        [Authorize]
         [HttpGet("api/v1/VehicleType")]
         public async Task<ActionResult> Get()
         {
@@ -48,6 +50,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [Authorize]
         [HttpGet("api/v1/VehicleType/{vehicleTypeId:int}")]
         public async Task<ActionResult> Get(int vehicleTypeId)
         {
@@ -77,6 +80,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [Authorize]
         [HttpPost("api/v1/VehicleType")]
         public async Task<ActionResult> Create(VehicleTypeBaseViewModel model)
         {
@@ -120,6 +124,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [Authorize]
         [HttpPut("api/v1/VehicleType")]
         public async Task<ActionResult> Update(VehicleTypeUpdateViewModel model)
         {
@@ -162,6 +167,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [Authorize]
         [HttpDelete("api/v1/VehicleType/{vehicleTypeId:int}")]
         public async Task<ActionResult> Delete(int vehicleTypeId)
         {

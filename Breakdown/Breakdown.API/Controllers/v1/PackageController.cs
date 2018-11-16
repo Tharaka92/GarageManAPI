@@ -11,6 +11,7 @@ using Breakdown.Contracts.Interfaces;
 using Breakdown.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Breakdown.API.Controllers.v1
 {
@@ -26,6 +27,7 @@ namespace Breakdown.API.Controllers.v1
             _packageRepository = packageRepository;
         }
 
+        [Authorize]
         [HttpGet("api/v1/Package")]
         public async Task<ActionResult> Get()
         {
@@ -50,6 +52,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [Authorize]
         [HttpGet("api/v1/Package/{packageId:int}")]
         public async Task<ActionResult> GetById(int packageId)
         {
@@ -79,6 +82,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [Authorize]
         [HttpGet("api/v1/Package/GetByServiceId/{serviceId:int}")]
         public async Task<ActionResult> GetByServiceId(int serviceId)
         {
@@ -109,6 +113,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [Authorize]
         [HttpGet("api/v1/Package/GetByVehicleTypeId/{vehicleTypeId:int}")]
         public async Task<ActionResult> GetByVehicleTypeId(int vehicleTypeId)
         {
@@ -139,6 +144,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [Authorize]
         [HttpPost("api/v1/Package")]
         public async Task<ActionResult> Create(PackageBaseViewModel model)
         {
@@ -181,6 +187,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [Authorize]
         [HttpPut("api/v1/Package")]
         public async Task<ActionResult> Update(PackageUpdateViewModel model)
         {
@@ -223,6 +230,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
+        [Authorize]
         [HttpDelete("api/v1/Package/{packageId:int}")]
         public async Task<ActionResult> Delete(int packageId)
         {

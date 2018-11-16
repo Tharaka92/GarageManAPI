@@ -12,6 +12,7 @@ namespace Breakdown.API.Controllers
         /// Junk method to check API availability
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         [HttpGet]
         public IEnumerable<string> Get()
         {

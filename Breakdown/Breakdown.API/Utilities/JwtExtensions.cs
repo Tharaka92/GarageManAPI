@@ -35,7 +35,7 @@ namespace Breakdown.API.Utilities
                             var invalidatedToken = dbService.ExpiredTokens.SingleOrDefault(et => et.Token == authToken);
                             if (invalidatedToken != null)
                             {
-                                context.Fail("User is logged out");
+                                context.Fail("User has logged out");
                                 return Task.CompletedTask;
                             }
                             return Task.CompletedTask;

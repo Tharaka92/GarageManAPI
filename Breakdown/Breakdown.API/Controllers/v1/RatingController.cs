@@ -7,6 +7,7 @@ using Breakdown.API.Constants;
 using Breakdown.API.ViewModels.Rating;
 using Breakdown.Contracts.Interfaces;
 using Breakdown.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +25,7 @@ namespace Breakdown.API.Controllers.v1
             _ratingRepository = ratingRepository;
         }
 
+        [Authorize]
         [HttpPost("api/v1/Rating")]
         public async Task<ActionResult> Create(RatingPostViewModel model)
         {
