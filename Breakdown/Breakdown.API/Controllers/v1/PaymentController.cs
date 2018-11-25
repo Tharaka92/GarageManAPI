@@ -45,7 +45,7 @@ namespace Breakdown.API.Controllers.v1
 
         [Authorize]
         [HttpPost("api/v1/Payment/Checkout")]
-        public async Task<IActionResult> Checkout(CardCheckoutViewModel model)
+        public async Task<IActionResult> Checkout(CheckoutViewModel model)
         {
             if (model == null)
             {
@@ -63,10 +63,14 @@ namespace Breakdown.API.Controllers.v1
                     });
                 }
 
-                var transactionResult = await _braintreeConfig.CreateSale(model.Nonce, model.TotalAmount);
-                if (!transactionResult.IsSuccess())
+                if (model.IsCard)
                 {
-                    return StatusCode(StatusCodes.Status417ExpectationFailed, new { IsSucceeded = false, Response = ResponseConstants.BraintreeCheckoutFailed });
+                    var transactionResult = await _braintreeConfig.CreateSale(model.Nonce, model.TotalAmount);
+                    if (!transactionResult.IsSuccess())
+                    {
+                        return StatusCode(StatusCodes.Status417ExpectationFailed, new { IsSucceeded = false, Response = ResponseConstants.BraintreeCheckoutFailed });
+                    }
+
                 }
 
                 await _serviceRequestRepository.UpdatePaymentDetailsAsync(model.ServiceRequestId,
@@ -74,9 +78,10 @@ namespace Breakdown.API.Controllers.v1
                                                                           model.PackagePrice,
                                                                           model.TipAmount,
                                                                           model.PaymentStatus,
-                                                                          model.PaymentType);
+                                                                          model.IsCard ? PaymentTypes.CARD : PaymentTypes.CASH);
 
-                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true });
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, model.IsCard });
+
             }
             catch (Exception ex)
             {
