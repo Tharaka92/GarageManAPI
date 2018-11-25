@@ -15,5 +15,7 @@ namespace Breakdown.EndSystems.MySql.StoredProcedures
         public decimal TipAmount { get; set; }
 
         public string PaymentStatus { get; set; }
+
+        public string PaymentType { get; set; }
     }
 }

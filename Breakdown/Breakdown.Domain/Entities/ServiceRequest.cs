@@ -42,6 +42,8 @@ namespace Breakdown.Domain.Entities
 
         public decimal TipAmount { get; set; }
 
+        public string PaymentType { get; set; }
+
         public ApplicationUser Customer { get; set; }
 
         public ApplicationUser Partner { get; set; }

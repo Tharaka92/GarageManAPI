@@ -45,7 +45,7 @@ namespace Breakdown.API.Controllers.v1
 
         [Authorize]
         [HttpPost("api/v1/Payment/Checkout")]
-        public async Task<IActionResult> Checkout(CheckoutViewModel model)
+        public async Task<IActionResult> Checkout(CardCheckoutViewModel model)
         {
             if (model == null)
             {
@@ -73,7 +73,8 @@ namespace Breakdown.API.Controllers.v1
                                                                           model.TotalAmount,
                                                                           model.PackagePrice,
                                                                           model.TipAmount,
-                                                                          model.PaymentStatus);
+                                                                          model.PaymentStatus,
+                                                                          model.PaymentType);
 
                 return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true });
             }

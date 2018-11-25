@@ -89,13 +89,15 @@ ServiceRequestId  int,
 TotalAmount decimal,
 PackagePrice decimal,
 TipAmount decimal,
-PaymentStatus varchar(50))
+PaymentStatus varchar(50),
+PaymentType varchar(20))
 BEGIN
  UPDATE ServiceRequests SET 
 	ServiceRequests.TotalAmount = TotalAmount,
 	ServiceRequests.PackagePrice = PackagePrice,
 	ServiceRequests.TipAmount = TipAmount,
-	ServiceRequests.PaymentStatus = PaymentStatus
+	ServiceRequests.PaymentStatus = PaymentStatus,
+	ServiceRequests.PaymentType = PaymentType
  WHERE ServiceRequests.ServiceRequestId = ServiceRequestId; 
 END$$
 DELIMITER $$

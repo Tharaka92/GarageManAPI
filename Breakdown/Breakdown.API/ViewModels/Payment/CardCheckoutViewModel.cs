@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Breakdown.API.ViewModels.Payment
 {
-    public class CheckoutViewModel
+    public class CardCheckoutViewModel
     {
         [Required]
         public int ServiceRequestId { get; set; }
@@ -24,5 +24,8 @@ namespace Breakdown.API.ViewModels.Payment
 
         [Required]
         public string PaymentStatus { get; set; }
+
+        [Required]
+        public string PaymentType { get; set; }
     }
 }

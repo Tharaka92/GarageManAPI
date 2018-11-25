@@ -128,7 +128,8 @@ namespace Breakdown.EndSystems.MySql.Repositories
                                                    decimal totalAmount,
                                                    decimal packagePrice,
                                                    decimal tipAmount,
-                                                   string paymentStatus)
+                                                   string paymentStatus,
+                                                   string paymentType)
         {
             try
             {
@@ -138,7 +139,8 @@ namespace Breakdown.EndSystems.MySql.Repositories
                     TotalAmount = totalAmount,
                     PackagePrice = packagePrice,
                     TipAmount = tipAmount,
-                    PaymentStatus = paymentStatus
+                    PaymentStatus = paymentStatus,
+                    PaymentType = paymentType
                 };
 
                 using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))
