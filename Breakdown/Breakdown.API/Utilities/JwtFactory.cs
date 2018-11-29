@@ -14,13 +14,18 @@ namespace Breakdown.API.Utilities
 {
     public static class JwtFactory
     {
-        public static async Task<string> GenerateJwtToken(string email, IdentityUser<int> user, IConfiguration configuration, JwtOptions jwtOptions)
+        public static async Task<string> GenerateJwtToken(string email,
+                                                          IdentityUser<int> user,
+                                                          IConfiguration configuration,
+                                                          JwtOptions jwtOptions,
+                                                          string roleName)
         {
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, email),
                 new Claim(JwtRegisteredClaimNames.Jti, await jwtOptions.JtiGenerator()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Role, roleName)
             };
 
              var token = new JwtSecurityToken(

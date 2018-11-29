@@ -40,5 +40,6 @@ namespace Breakdown.EndSystems.IdentityConfig
         public DbSet<VehicleType> VehicleTypes { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<ExpiredToken> ExpiredTokens { get; set; }
+        public DbSet<PartnerPayment> PartnerPayments { get; set; }
     }
 }

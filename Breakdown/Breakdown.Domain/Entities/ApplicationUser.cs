@@ -41,5 +41,7 @@ namespace Breakdown.Domain.Entities
 
         [InverseProperty("Partner")]
         public List<ServiceRequest> PartnerJobs { get; set; }
+
+        public List<PartnerPayment> PartnerPayments { get; set; }
     }
 }

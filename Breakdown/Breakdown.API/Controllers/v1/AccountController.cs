@@ -19,6 +19,7 @@ using Breakdown.Contracts.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 
 namespace Breakdown.API.Controllers.v1
 {
@@ -88,7 +89,7 @@ namespace Breakdown.API.Controllers.v1
                     Email = appUser.Email,
                     Country = appUser.Country,
                     PhoneNumber = appUser.PhoneNumber,
-                    Token = await JwtFactory.GenerateJwtToken(model.Email, appUser, _configuration, _jwtOptions),
+                    Token = await JwtFactory.GenerateJwtToken(model.Email, appUser, _configuration, _jwtOptions, roles.FirstOrDefault()),
                     RoleName = roles.FirstOrDefault(),
                     ProfileImageUrl = appUser.ProfileImageUrl,
                     VehicleNumber = appUser.VehicleNumber,
@@ -213,6 +214,32 @@ namespace Breakdown.API.Controllers.v1
                 };
 
                 return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Response = userProfileResponseVm });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
+            }
+        }
+
+        [Authorize]
+        [HttpGet("api/v1/Account/GetPartners")]
+        public async Task<IActionResult> GetPartners()
+        {
+            try
+            {
+                var partners = await _userManager.GetUsersInRoleAsync(Roles.PARTNER);
+                if (partners.Count() == 0)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new { IsSucceeded = false, Response = ResponseConstants.NotFound });
+                }
+
+                var partnerVms = Mapper.Map<IList<PartnerViewModel>>(partners);
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, Response = partnerVms });
+
             }
             catch (Exception ex)
             {

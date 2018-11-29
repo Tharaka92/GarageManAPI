@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Breakdown.API.ViewModels;
+using Breakdown.API.ViewModels.Account;
 using Breakdown.API.ViewModels.Package;
 using Breakdown.API.ViewModels.Rating;
 using Breakdown.API.ViewModels.Service;
@@ -33,6 +34,8 @@ namespace Breakdown.API.AutoMapperConfig
             CreateMap<ServiceRequest, ServiceRequestPostViewModel>().ReverseMap();
 
             CreateMap<Rating, RatingPostViewModel>().ReverseMap();
+
+            CreateMap<ApplicationUser, PartnerViewModel>().ReverseMap();
         }
     }
 }
