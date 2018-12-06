@@ -14,9 +14,9 @@ namespace Breakdown.Domain.Entities
         [ForeignKey("ApplicationUser")]
         public int PartnerId { get; set; }
 
-        public int? TotalCashJobs { get; set; }
+        public int TotalCashJobs { get; set; }
 
-        public int? TotalCardJobs { get; set; }
+        public int TotalCardJobs { get; set; }
 
         public DateTime? From { get; set; }
 
@@ -28,13 +28,11 @@ namespace Breakdown.Domain.Entities
 
         public decimal TotalCardAmount { get; set; }
 
-        public decimal CashAppFee { get; set; }
+        public decimal AppFee { get; set; }
 
-        public decimal CardAppFee { get; set; }
+        public decimal AppFeePaidAmount { get; set; }
 
-        public decimal TotalCardEarning { get; set; }
-
-        public decimal TotalCashEarning { get; set; }
+        public decimal AppFeeRemainingAmount { get; set; }
 
         public bool HasPaid { get; set; }
 
