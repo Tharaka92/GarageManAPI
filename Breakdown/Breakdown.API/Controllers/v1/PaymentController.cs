@@ -76,7 +76,7 @@ namespace Breakdown.API.Controllers.v1
                 await _serviceRequestRepository.UpdatePaymentDetailsAsync(model.ServiceRequestId,
                                                                           model.TotalAmount,
                                                                           model.PackagePrice,
-                                                                          model.TipAmount,
+                                                                          model.PartnerAmount,
                                                                           model.PaymentStatus,
                                                                           model.IsCard ? PaymentTypes.CARD : PaymentTypes.CASH);
 

@@ -12,7 +12,7 @@ namespace Breakdown.EndSystems.MySql.StoredProcedures
 
         public decimal PackagePrice { get; set; }
 
-        public decimal TipAmount { get; set; }
+        public decimal PartnerAmount { get; set; }
 
         public string PaymentStatus { get; set; }
 

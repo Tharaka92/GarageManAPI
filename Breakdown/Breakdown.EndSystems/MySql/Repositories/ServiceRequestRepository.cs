@@ -127,7 +127,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
         public async Task<int> UpdatePaymentDetailsAsync(int serviceRequestId,
                                                    decimal totalAmount,
                                                    decimal packagePrice,
-                                                   decimal tipAmount,
+                                                   decimal partnerAmount,
                                                    string paymentStatus,
                                                    string paymentType)
         {
@@ -138,7 +138,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
                     ServiceRequestId = serviceRequestId,
                     TotalAmount = totalAmount,
                     PackagePrice = packagePrice,
-                    TipAmount = tipAmount,
+                    PartnerAmount = partnerAmount,
                     PaymentStatus = paymentStatus,
                     PaymentType = paymentType
                 };

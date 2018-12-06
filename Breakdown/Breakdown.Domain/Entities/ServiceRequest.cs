@@ -40,7 +40,7 @@ namespace Breakdown.Domain.Entities
 
         public decimal PackagePrice { get; set; }
 
-        public decimal TipAmount { get; set; }
+        public decimal PartnerAmount { get; set; }
 
         public string PaymentType { get; set; }
 

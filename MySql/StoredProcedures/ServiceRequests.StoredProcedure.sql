@@ -88,14 +88,14 @@ CREATE PROCEDURE `SPUpdatePaymentDetails`(
 ServiceRequestId  int,
 TotalAmount decimal,
 PackagePrice decimal,
-TipAmount decimal,
+PartnerAmount decimal,
 PaymentStatus varchar(50),
 PaymentType varchar(20))
 BEGIN
  UPDATE ServiceRequests SET 
 	ServiceRequests.TotalAmount = TotalAmount,
 	ServiceRequests.PackagePrice = PackagePrice,
-	ServiceRequests.TipAmount = TipAmount,
+	ServiceRequests.PartnerAmount = PartnerAmount,
 	ServiceRequests.PaymentStatus = PaymentStatus,
 	ServiceRequests.PaymentType = PaymentType
  WHERE ServiceRequests.ServiceRequestId = ServiceRequestId; 

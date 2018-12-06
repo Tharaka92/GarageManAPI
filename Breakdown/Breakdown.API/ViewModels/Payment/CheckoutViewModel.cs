@@ -19,7 +19,8 @@ namespace Breakdown.API.ViewModels.Payment
         [Required]
         public decimal PackagePrice { get; set; }
 
-        public decimal TipAmount { get; set; }
+        [Required]
+        public decimal PartnerAmount { get; set; }
 
         [Required]
         public string PaymentStatus { get; set; }
