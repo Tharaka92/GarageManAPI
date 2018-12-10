@@ -26,7 +26,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
         {
             try
             {
-                SPInsertVehicleType parameters = new SPInsertVehicleType()
+                SPInsertVehicleType parameters = new SPInsertVehicleType
                 {
                     Name = vehicleTypeToCreate.Name,
                     Description = vehicleTypeToCreate.Description,
@@ -48,7 +48,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
         {
             try
             {
-                SPDeleteVehicleType parameters = new SPDeleteVehicleType()
+                SPDeleteVehicleType parameters = new SPDeleteVehicleType
                 {
                     VehicleTypeId = vehicleTypeId
                 };
@@ -90,7 +90,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
         {
             try
             {
-                SPUpdateVehicleType parameters = new SPUpdateVehicleType()
+                SPUpdateVehicleType parameters = new SPUpdateVehicleType
                 {
                     VehicleTypeId = vehicleTypeToUpdate.VehicleTypeId,
                     Name = vehicleTypeToUpdate.Name,

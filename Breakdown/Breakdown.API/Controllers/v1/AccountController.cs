@@ -34,8 +34,8 @@ namespace Breakdown.API.Controllers.v1
         private readonly IExpiredTokenRepository _expiredTokenRepository;
 
         public AccountController(
-            UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole<int>> roleManager,
             IConfiguration configuration,
             IOptions<JwtOptions> jwtOptions,

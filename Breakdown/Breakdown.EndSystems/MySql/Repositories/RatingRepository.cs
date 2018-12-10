@@ -26,7 +26,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
         {
             try
             {
-                SPInsertRating parameters = new SPInsertRating()
+                SPInsertRating parameters = new SPInsertRating
                 {
                    UserId = ratingToCreate.UserId,
                    ServiceRequestId = ratingToCreate.ServiceRequestId,

@@ -65,6 +65,7 @@ namespace Breakdown.API
             services.AddTransient<IVehicleTypeRepository, VehicleTypeRepository>();
             services.AddTransient<IServiceRequestRepository, ServiceRequestRepository>();
             services.AddTransient<IRatingRepository, RatingRepository>();
+            services.AddTransient<IPartnerPaymentRepository, PartnerPaymentRepository>();
 
             var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtOptions));
             SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["JwtKey"]));

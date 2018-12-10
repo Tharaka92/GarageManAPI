@@ -1,4 +1,5 @@
-﻿using Breakdown.Domain.Entities;
+﻿using Breakdown.Domain.DTOs;
+using Breakdown.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,5 +14,6 @@ namespace Breakdown.Contracts.Interfaces
         Task<int> UpdateServiceRequestStatusAsync(int serviceRequestId, string serviceRequestStatus);
         Task<int> CompleteServiceRequestAsync(int serviceRequestId, string serviceRequestStatus, DateTime startDate, DateTime endDate);
         Task<int> UpdatePaymentDetailsAsync(int serviceRequestId, decimal totalAmount, decimal packagePrice, decimal partnerAmount, string paymentStatus, string paymentType);
+        Task<PartnerPaymentDto> RetrievePaymentAmountAsync(int partnerId, DateTime fromDate, DateTime toDate);
     }
 }

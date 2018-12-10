@@ -27,7 +27,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
         {
             try
             {
-                SPInsertPackage parameters = new SPInsertPackage()
+                SPInsertPackage parameters = new SPInsertPackage
                 {
                     ServiceId = packageToCreate.ServiceId,
                     VehicleTypeId = packageToCreate.VehicleTypeId,

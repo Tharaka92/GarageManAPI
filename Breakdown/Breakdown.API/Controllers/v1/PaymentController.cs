@@ -10,6 +10,11 @@ using Breakdown.Contracts.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Breakdown.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Breakdown.API.ViewModels.PartnerPayment;
+using AutoMapper;
 
 namespace Breakdown.API.Controllers.v1
 {
@@ -18,11 +23,17 @@ namespace Breakdown.API.Controllers.v1
     {
         private readonly IBraintreeConfiguration _braintreeConfig;
         private readonly IServiceRequestRepository _serviceRequestRepository;
+        private readonly IPartnerPaymentRepository _partnerPaymentRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PaymentController(IBraintreeConfiguration braintreeConfig, IServiceRequestRepository serviceRequestRepository)
+        public PaymentController(IBraintreeConfiguration braintreeConfig,
+                                 IServiceRequestRepository serviceRequestRepository,
+                                 IPartnerPaymentRepository partnerPaymentRepository,
+                                 UserManager<ApplicationUser> userManager)
         {
             _braintreeConfig = braintreeConfig;
             _serviceRequestRepository = serviceRequestRepository;
+            _partnerPaymentRepository = partnerPaymentRepository;
         }
 
         [Authorize]
@@ -82,6 +93,74 @@ namespace Breakdown.API.Controllers.v1
 
                 return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, model.IsCard });
 
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
+            }
+        }
+
+        //[Authorize]
+        [HttpPost("api/v1/Payment/GetPartnerPayments")]
+        public async Task<IActionResult> GetPartnerPayments(PartnerPaymentRequestViewModel model)
+        {
+            if (model == null)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.RequestContentNull });
+            }
+
+            try
+            {
+                if (!TryValidateModel(model))
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, new
+                    {
+                        IsSucceeded = false,
+                        Response = ResponseConstants.ValidationFailure
+                    });
+                }
+
+                if (model.PartnerId <= 0)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.InvalidData });
+                }
+
+                var partnerPaymentDto = await _serviceRequestRepository.RetrievePaymentAmountAsync(model.PartnerId, model.FromDate, model.ToDate);
+                if (partnerPaymentDto == null)
+                {
+                    return StatusCode(StatusCodes.Status204NoContent);
+                }
+
+                if (partnerPaymentDto.CashCount == 0) //Only accept Cash payments from frontend apps for now.
+                {
+                    return StatusCode(StatusCodes.Status204NoContent);
+                }
+
+                var partnerPaymentToCreate = Mapper.Map<PartnerPayment>(partnerPaymentDto);
+                partnerPaymentToCreate.AppFee += partnerPaymentToCreate.CashCount * 100;
+
+                if (model.IsNewPaymentCycle)
+                {
+                    partnerPaymentToCreate.AppFeeRemainingAmount = partnerPaymentToCreate.AppFee;
+                    partnerPaymentToCreate.From = model.FromDate;
+                    partnerPaymentToCreate.To = model.ToDate;
+                    partnerPaymentToCreate.CreatedDate = DateTime.UtcNow;
+
+                    int affectedRows = await _partnerPaymentRepository.CreateAsync(partnerPaymentToCreate);
+                    if (affectedRows > 0)
+                    {
+                        var appUser = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == model.PartnerId);
+                        appUser.HasADuePayment = true;
+                        await _userManager.UpdateAsync(appUser);
+                    }
+                }
+
+                var partnerPaymentVm = Mapper.Map<PartnerPaymentResponseViewModel>(partnerPaymentToCreate);
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, PartnerPayment = partnerPaymentVm });
             }
             catch (Exception ex)
             {

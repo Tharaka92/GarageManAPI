@@ -26,7 +26,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
         {
             try
             {
-                SPInsertService parameters = new SPInsertService()
+                SPInsertService parameters = new SPInsertService
                 {
                     ServiceName = serviceToCreate.ServiceName,
                     UniqueCode = serviceToCreate.UniqueCode
@@ -48,7 +48,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
         {
             try
             {
-                SPDeleteService parameters = new SPDeleteService()
+                SPDeleteService parameters = new SPDeleteService
                 {
                     ServiceId = serviceId
                 };
@@ -90,7 +90,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
         {
             try
             {
-                SPUpdateService parameters = new SPUpdateService()
+                SPUpdateService parameters = new SPUpdateService
                 {
                     ServiceId = serviceToUpdate.ServiceId,
                     ServiceName = serviceToUpdate.ServiceName,

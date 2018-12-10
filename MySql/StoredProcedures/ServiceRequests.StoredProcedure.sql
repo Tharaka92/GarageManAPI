@@ -103,15 +103,69 @@ END$$
 DELIMITER $$
 
 -- ----------------------------------------------------------------------------
--- Routine SPDeleteVehicleType
+-- Routine SPRetrievePaymentAmount
 -- ----------------------------------------------------------------------------
 
--- DELIMITER $$
--- CREATE PROCEDURE `SPDeleteVehicleType`(
--- VehicleTypeId int)
--- BEGIN
---  UPDATE VehicleTypes SET 
--- 	VehicleTypes.IsDeleted = 1
---  WHERE VehicleTypes.VehicleTypeId = VehicleTypeId;
--- END$$
--- DELIMITER $$
+DELIMITER $$
+CREATE DEFINER=`breakdown_user`@`%` PROCEDURE `SPRetrievePaymentAmount`(
+IN PartnerId  int,
+IN FromDate datetime,
+IN ToDate datetime,
+OUT AppFee decimal(15,2),
+OUT TotalCashAmount decimal(15,2),
+OUT TotalCardAmount decimal(15,2),
+OUT CashCount int,
+OUT CardCount int)
+BEGIN
+ SELECT 
+	ROUND(SUM(ServiceRequests.PackagePrice), 2) INTO AppFee
+ FROM ServiceRequests
+ WHERE 
+	ServiceRequests.PartnerId = PartnerId AND
+    ServiceRequests.SubmittedDate >= FromDate AND
+    ServiceRequests.SubmittedDate <= ToDate AND
+    ServiceRequests.IsCompleted = 1;
+    
+ SELECT 
+	ROUND(SUM(ServiceRequests.PartnerAmount), 2) INTO TotalCashAmount
+ FROM ServiceRequests
+ WHERE 
+	ServiceRequests.PartnerId = PartnerId AND
+    ServiceRequests.SubmittedDate >= FromDate AND
+    ServiceRequests.SubmittedDate <= ToDate AND
+    ServiceRequests.PaymentType = 'cash' AND
+    ServiceRequests.IsCompleted = 1;
+    
+ SELECT 
+	ROUND(SUM(ServiceRequests.PartnerAmount), 2) INTO TotalCardAmount
+ FROM ServiceRequests
+ WHERE 
+	ServiceRequests.PartnerId = PartnerId AND
+    ServiceRequests.SubmittedDate >= FromDate AND
+    ServiceRequests.SubmittedDate <= ToDate AND
+    ServiceRequests.PaymentType = 'card' AND
+    ServiceRequests.IsCompleted = 1;
+    
+ SELECT 
+	COUNT(ServiceRequests.ServiceRequestId) INTO CashCount
+ FROM ServiceRequests
+ WHERE 
+	ServiceRequests.PartnerId = PartnerId AND
+    ServiceRequests.SubmittedDate >= FromDate AND
+    ServiceRequests.SubmittedDate <= ToDate AND
+    ServiceRequests.PaymentType = 'cash' AND
+    ServiceRequests.IsCompleted = 1;
+    
+ SELECT 
+	COUNT(ServiceRequests.ServiceRequestId) INTO CardCount
+ FROM ServiceRequests
+ WHERE 
+	ServiceRequests.PartnerId = PartnerId AND
+    ServiceRequests.SubmittedDate >= FromDate AND
+    ServiceRequests.SubmittedDate <= ToDate AND
+    ServiceRequests.PaymentType = 'card' AND
+    ServiceRequests.IsCompleted = 1;
+    
+ SELECT AppFee, CashCount, CardCount, TotalCashAmount, TotalCardAmount;
+END$$
+DELIMITER $$

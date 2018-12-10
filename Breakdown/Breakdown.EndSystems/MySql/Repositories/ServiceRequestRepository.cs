@@ -11,6 +11,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Breakdown.Domain.DTOs;
 
 namespace Breakdown.EndSystems.MySql.Repositories
 {
@@ -27,7 +28,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
         {
             try
             {
-                SPInsertServiceRequest parameters = new SPInsertServiceRequest()
+                SPInsertServiceRequest parameters = new SPInsertServiceRequest
                 {
                     CustomerId = serviceRequestToCreate.CustomerId,
                     PartnerId = serviceRequestToCreate.PartnerId,
@@ -55,7 +56,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
         {
             try
             {
-                SPRetrieveLatestServiceRequestId parameters = new SPRetrieveLatestServiceRequestId()
+                SPRetrieveLatestServiceRequestId parameters = new SPRetrieveLatestServiceRequestId
                 {
                     CustomerId = customerId,
                     PartnerId = partnerId,
@@ -79,7 +80,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
         {
             try
             {
-                SPUpdateServiceRequestStatus parameters = new SPUpdateServiceRequestStatus()
+                SPUpdateServiceRequestStatus parameters = new SPUpdateServiceRequestStatus
                 {
                     ServiceRequestId = serviceRequestId,
                     ServiceRequestStatus = serviceRequestStatus
@@ -104,7 +105,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
         {
             try
             {
-                SPCompleteServiceRequest parameters = new SPCompleteServiceRequest()
+                SPCompleteServiceRequest parameters = new SPCompleteServiceRequest
                 {
                     ServiceRequestId = serviceRequestId,
                     ServiceRequestStatus = serviceRequestStatus,
@@ -133,7 +134,7 @@ namespace Breakdown.EndSystems.MySql.Repositories
         {
             try
             {
-                SPUpdatePaymentDetails parameters = new SPUpdatePaymentDetails()
+                SPUpdatePaymentDetails parameters = new SPUpdatePaymentDetails
                 {
                     ServiceRequestId = serviceRequestId,
                     TotalAmount = totalAmount,
@@ -147,6 +148,47 @@ namespace Breakdown.EndSystems.MySql.Repositories
                 {
                     connection.Open();
                     return await connection.ExecuteAsync(sql: parameters.GetName(), param: parameters, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<PartnerPaymentDto> RetrievePaymentAmountAsync(int partnerId, DateTime fromDate, DateTime toDate)
+        {
+            try
+            {
+                SPRetrievePaymentAmount parameters = new SPRetrievePaymentAmount
+                {
+                    PartnerId = partnerId,
+                    FromDate = fromDate,
+                    ToDate = toDate
+                };
+
+                DynamicParameters dynamicParameters = new DynamicParameters(parameters);
+                dynamicParameters.Add("AppFee", dbType: DbType.Decimal, direction: ParameterDirection.Output);
+                dynamicParameters.Add("TotalCashAmount", dbType: DbType.Decimal, direction: ParameterDirection.Output);
+                dynamicParameters.Add("TotalCardAmount", dbType: DbType.Decimal, direction: ParameterDirection.Output);
+                dynamicParameters.Add("CashCount", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                dynamicParameters.Add("CardCount", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))
+                {
+                    connection.Open();
+                    await connection.ExecuteAsync(sql: parameters.GetName(), param: dynamicParameters, commandType: CommandType.StoredProcedure);
+
+                    PartnerPaymentDto returnDto = new PartnerPaymentDto
+                    {
+                        AppFee = dynamicParameters.Get<decimal>("AppFee"),
+                        TotalCardAmount = dynamicParameters.Get<decimal>("TotalCardAmount"),
+                        TotalCashAmount = dynamicParameters.Get<decimal>("TotalCashAmount"),
+                        CardCount = dynamicParameters.Get<int>("CardCount"),
+                        CashCount = dynamicParameters.Get<int>("CashCount")
+                    };
+
+                    return returnDto;
                 }
             }
             catch (Exception ex)

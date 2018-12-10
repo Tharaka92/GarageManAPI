@@ -2,11 +2,13 @@
 using Breakdown.API.ViewModels;
 using Breakdown.API.ViewModels.Account;
 using Breakdown.API.ViewModels.Package;
+using Breakdown.API.ViewModels.Payment;
 using Breakdown.API.ViewModels.Rating;
 using Breakdown.API.ViewModels.Service;
 using Breakdown.API.ViewModels.ServiceRequest;
 using Breakdown.API.ViewModels.VehicleType;
 using Breakdown.Contracts.Options;
+using Breakdown.Domain.DTOs;
 using Breakdown.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -36,6 +38,9 @@ namespace Breakdown.API.AutoMapperConfig
             CreateMap<Rating, RatingPostViewModel>().ReverseMap();
 
             CreateMap<ApplicationUser, PartnerViewModel>().ReverseMap();
+
+            CreateMap<PartnerPayment, PartnerPaymentResponseViewModel>().ReverseMap();
+            CreateMap<PartnerPayment, PartnerPaymentDto>().ReverseMap();
         }
     }
 }
