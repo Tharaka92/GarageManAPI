@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Breakdown.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Breakdown.API.ViewModels.PartnerPayment;
 using AutoMapper;
 
 namespace Breakdown.API.Controllers.v1
@@ -104,9 +103,9 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
-        //[Authorize]
-        [HttpPost("api/v1/Payment/GetPartnerPayments")]
-        public async Task<IActionResult> GetPartnerPayments(PartnerPaymentRequestViewModel model)
+        [Authorize]
+        [HttpPost("api/v1/Payment/GetPartnerEarnings")]
+        public async Task<IActionResult> GetPartnerEarnings(PartnerEarningsRequestViewModel model)
         {
             if (model == null)
             {
@@ -159,8 +158,8 @@ namespace Breakdown.API.Controllers.v1
                     }
                 }
 
-                var partnerPaymentVm = Mapper.Map<PartnerPaymentResponseViewModel>(partnerPaymentToCreate);
-                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, PartnerPayment = partnerPaymentVm });
+                var partnerEarningsVm = Mapper.Map<PartnerEarningsResponseViewModel>(partnerPaymentToCreate);
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, PartnerEarnings = partnerEarningsVm });
             }
             catch (Exception ex)
             {

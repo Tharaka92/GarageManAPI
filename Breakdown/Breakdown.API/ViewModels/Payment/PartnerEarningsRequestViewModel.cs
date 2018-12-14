@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Breakdown.API.ViewModels.PartnerPayment
+namespace Breakdown.API.ViewModels.Payment
 {
-    public class PartnerPaymentRequestViewModel
+    public class PartnerEarningsRequestViewModel
     {
         [Required]
         public int PartnerId { get; set; }

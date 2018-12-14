@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Breakdown.API.ViewModels.Payment
 {
-    public class PartnerPaymentResponseViewModel
+    public class PartnerEarningsResponseViewModel
     {
         public decimal AppFee { get; set; }
 
@@ -16,5 +16,7 @@ namespace Breakdown.API.ViewModels.Payment
         public int CashCount { get; set; }
 
         public int CardCount { get; set; }
+
+        public decimal TotalCashEarnings => TotalCashAmount - AppFee;
     }
 }
