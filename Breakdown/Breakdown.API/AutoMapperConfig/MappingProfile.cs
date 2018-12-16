@@ -41,6 +41,7 @@ namespace Breakdown.API.AutoMapperConfig
 
             CreateMap<PartnerPayment, PartnerEarningsResponseViewModel>().ReverseMap();
             CreateMap<PartnerPayment, PartnerPaymentDto>().ReverseMap();
+            CreateMap<PartnerPayment, OverDuePartnerFeeViewModel>().ReverseMap();
         }
     }
 }

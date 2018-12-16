@@ -181,11 +181,11 @@ namespace Breakdown.EndSystems.MySql.Repositories
 
                     PartnerPaymentDto returnDto = new PartnerPaymentDto
                     {
-                        AppFee = dynamicParameters.Get<decimal>("AppFee"),
-                        TotalCardAmount = dynamicParameters.Get<decimal>("TotalCardAmount"),
-                        TotalCashAmount = dynamicParameters.Get<decimal>("TotalCashAmount"),
-                        CardCount = dynamicParameters.Get<int>("CardCount"),
-                        CashCount = dynamicParameters.Get<int>("CashCount")
+                        AppFee = dynamicParameters.Get<dynamic>("AppFee") == null ? 0.00m : dynamicParameters.Get<dynamic>("AppFee"),
+                        TotalCardAmount = dynamicParameters.Get<dynamic>("TotalCardAmount") == null ? 0.00m : dynamicParameters.Get<dynamic>("TotalCardAmount"),
+                        TotalCashAmount = dynamicParameters.Get<dynamic>("TotalCashAmount") == null ? 0.00m : dynamicParameters.Get<dynamic>("TotalCashAmount"),
+                        CardCount = dynamicParameters.Get<dynamic>("CardCount"),
+                        CashCount = dynamicParameters.Get<dynamic>("CashCount")
                     };
 
                     return returnDto;

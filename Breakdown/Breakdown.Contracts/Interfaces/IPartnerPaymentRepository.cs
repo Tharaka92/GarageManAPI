@@ -10,6 +10,6 @@ namespace Breakdown.Contracts.Interfaces
     public interface IPartnerPaymentRepository
     {
         Task<int> CreateAsync(PartnerPayment recordToCreate);
-        Task<PartnerPayment> RetrieveAsync(int PartnerId, DateTime FromDate, DateTime ToDate);
+        Task<PartnerPayment> RetrieveAsync(int PartnerId);
     }
 }

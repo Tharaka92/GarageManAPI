@@ -7,10 +7,10 @@ namespace Breakdown.EndSystems.MySql.StoredProcedures
     public class SPInsertPartnerPayment : SP
     {
         public int PartnerId { get; set; }
-        public int TotalCashJobs { get; set; }
-        public int TotalCardJobs { get; set; }
-        public DateTime? From { get; set; }
-        public DateTime? To { get; set; }
+        public int CashCount { get; set; }
+        public int CardCount { get; set; }
+        public DateTime? FromDate { get; set; }
+        public DateTime? ToDate { get; set; }
         public DateTime CreatedDate { get; set; }
         public decimal TotalCashAmount { get; set; }
         public decimal TotalCardAmount { get; set; }

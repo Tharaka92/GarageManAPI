@@ -18,9 +18,9 @@ namespace Breakdown.Domain.Entities
 
         public int CardCount { get; set; }
 
-        public DateTime? From { get; set; }
+        public DateTime? FromDate { get; set; }
 
-        public DateTime? To { get; set; }
+        public DateTime? ToDate { get; set; }
 
         public DateTime CreatedDate { get; set; }
 

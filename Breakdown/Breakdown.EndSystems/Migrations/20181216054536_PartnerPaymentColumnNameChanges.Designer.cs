@@ -3,14 +3,16 @@ using System;
 using Breakdown.EndSystems.IdentityConfig;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Breakdown.EndSystems.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181216054536_PartnerPaymentColumnNameChanges")]
+    partial class PartnerPaymentColumnNameChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -161,7 +163,7 @@ namespace Breakdown.EndSystems.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
-                    b.Property<DateTime?>("FromDate");
+                    b.Property<DateTime?>("From");
 
                     b.Property<bool>("HasPaid");
 
@@ -169,7 +171,7 @@ namespace Breakdown.EndSystems.Migrations
 
                     b.Property<int>("PartnerId");
 
-                    b.Property<DateTime?>("ToDate");
+                    b.Property<DateTime?>("To");
 
                     b.Property<decimal>("TotalCardAmount")
                         .HasColumnType("decimal(15, 2)");

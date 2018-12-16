@@ -31,10 +31,10 @@ namespace Breakdown.EndSystems.MySql.Repositories
                 SPInsertPartnerPayment parameters = new SPInsertPartnerPayment
                 {
                     PartnerId = recordToCreate.PartnerId,
-                    TotalCashJobs = recordToCreate.CashCount,
-                    TotalCardJobs = recordToCreate.CardCount,
-                    From = recordToCreate.From,
-                    To = recordToCreate.To,
+                    CashCount = recordToCreate.CashCount,
+                    CardCount = recordToCreate.CardCount,
+                    FromDate = recordToCreate.FromDate,
+                    ToDate = recordToCreate.ToDate,
                     CreatedDate = recordToCreate.CreatedDate,
                     TotalCashAmount = recordToCreate.TotalCashAmount,
                     TotalCardAmount = recordToCreate.TotalCardAmount,
@@ -57,15 +57,13 @@ namespace Breakdown.EndSystems.MySql.Repositories
             }
         }
 
-        public async Task<PartnerPayment> RetrieveAsync(int partnerId, DateTime fromDate, DateTime toDate)
+        public async Task<PartnerPayment> RetrieveAsync(int partnerId)
         {
             try
             {
                 SPRetrievePartnerPayment parameters = new SPRetrievePartnerPayment
                 {
-                    PartnerId = partnerId,
-                    FromDate = fromDate,
-                    ToDate = toDate
+                    PartnerId = partnerId
                 };
 
                 using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))

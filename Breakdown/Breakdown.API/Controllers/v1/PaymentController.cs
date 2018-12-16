@@ -33,6 +33,7 @@ namespace Breakdown.API.Controllers.v1
             _braintreeConfig = braintreeConfig;
             _serviceRequestRepository = serviceRequestRepository;
             _partnerPaymentRepository = partnerPaymentRepository;
+            _userManager = userManager;
         }
 
         [Authorize]
@@ -104,8 +105,8 @@ namespace Breakdown.API.Controllers.v1
         }
 
         [Authorize]
-        [HttpPost("api/v1/Payment/GetPartnerEarnings")]
-        public async Task<IActionResult> GetPartnerEarnings(PartnerEarningsRequestViewModel model)
+        [HttpPost("api/v1/Payment/CalculatePartnerEarnings")]
+        public async Task<IActionResult> CalculatePartnerEarnings(PartnerEarningsRequestViewModel model)
         {
             if (model == null)
             {
@@ -144,10 +145,11 @@ namespace Breakdown.API.Controllers.v1
 
                 if (model.IsNewPaymentCycle)
                 {
+                    partnerPaymentToCreate.PartnerId = model.PartnerId;
                     partnerPaymentToCreate.AppFeeRemainingAmount = partnerPaymentToCreate.AppFee;
-                    partnerPaymentToCreate.From = model.FromDate;
-                    partnerPaymentToCreate.To = model.ToDate;
-                    partnerPaymentToCreate.CreatedDate = DateTime.UtcNow;
+                    partnerPaymentToCreate.FromDate = model.FromDate;
+                    partnerPaymentToCreate.ToDate = model.ToDate;
+                    partnerPaymentToCreate.CreatedDate = DateTime.Now;
 
                     int affectedRows = await _partnerPaymentRepository.CreateAsync(partnerPaymentToCreate);
                     if (affectedRows > 0)
@@ -160,6 +162,36 @@ namespace Breakdown.API.Controllers.v1
 
                 var partnerEarningsVm = Mapper.Map<PartnerEarningsResponseViewModel>(partnerPaymentToCreate);
                 return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, PartnerEarnings = partnerEarningsVm });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
+            }
+        }
+
+        [Authorize]
+        [HttpGet("api/v1/Payment/GetOverDuePartnerFee")]
+        public async Task<IActionResult> GetOverDuePartnerFee(int partnerId)
+        {
+            if (partnerId <= 0)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.InvalidData });
+            }
+
+            try
+            {
+                var partnerPayment = await _partnerPaymentRepository.RetrieveAsync(partnerId);
+                if (partnerPayment == null)
+                {
+                    return StatusCode(StatusCodes.Status204NoContent);
+                }
+
+                var overDuePartnerFeeVm = Mapper.Map<OverDuePartnerFeeViewModel>(partnerPayment);
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, OverDuePartnerFee = overDuePartnerFeeVm });
             }
             catch (Exception ex)
             {

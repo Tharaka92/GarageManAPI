@@ -3,18 +3,16 @@
 -- ----------------------------------------------------------------------------
 
 DELIMITER $$
-CREATE PROCEDURE `SPRetrievePartnerPayment`(
-PartnerId  int,
-FromDate datetime,
-ToDate datetime)
+CREATE DEFINER=`breakdown_user`@`%` PROCEDURE `SPRetrievePartnerPayment`(
+PartnerId  int)
 BEGIN
  SELECT 
 	PartnerPayments.PartnerPaymentId,
 	PartnerPayments.PartnerId,
 	PartnerPayments.CashCount,
 	PartnerPayments.CardCount,
-	PartnerPayments.From,
-	PartnerPayments.To,
+	PartnerPayments.FromDate,
+	PartnerPayments.ToDate,
 	PartnerPayments.CreatedDate,
 	PartnerPayments.TotalCashAmount,
 	PartnerPayments.TotalCardAmount,
@@ -25,9 +23,10 @@ BEGIN
 	PartnerPayments.HasReceived
  FROM PartnerPayments
  WHERE 
- 	PartnerPayments.From = FromDate AND
-	PartnerPayments.To = ToDate AND
-	PartnerPayments.PartnerId = PartnerId;
+	PartnerPayments.PartnerId = PartnerId AND
+    PartnerPayments.HasReceived = 0
+ ORDER BY CreatedDate DESC
+ LIMIT 1;
 END$$
 DELIMITER $$
 
@@ -35,8 +34,7 @@ DELIMITER $$
 -- Routine SPInsertPartnerPayment
 -- ----------------------------------------------------------------------------
 
-DELIMITER $
-$
+DELIMITER $$
 CREATE PROCEDURE `SPInsertPartnerPayment`(
 PartnerId int,
 CashCount int,
