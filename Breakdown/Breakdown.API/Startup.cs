@@ -45,6 +45,7 @@ namespace Breakdown.API
             services.Configure<ConnectionStringOptions>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<BraintreeOptions>(Configuration.GetSection("BraintreeOptions"));
             services.Configure<MailOptions>(Configuration.GetSection("MailOptions"));
+            services.Configure<PaymentDetailsOptions>(Configuration.GetSection("PaymentDetailsOptions"));
 
             // ===== Add DbContext ========
             services.AddDbContext<ApplicationDbContext>();

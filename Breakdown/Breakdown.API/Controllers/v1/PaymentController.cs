@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Breakdown.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using Microsoft.Extensions.Options;
 
 namespace Breakdown.API.Controllers.v1
 {
@@ -24,16 +25,19 @@ namespace Breakdown.API.Controllers.v1
         private readonly IServiceRequestRepository _serviceRequestRepository;
         private readonly IPartnerPaymentRepository _partnerPaymentRepository;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IOptions<PaymentDetailsOptions> _paymentDetails;
 
         public PaymentController(IBraintreeConfiguration braintreeConfig,
                                  IServiceRequestRepository serviceRequestRepository,
                                  IPartnerPaymentRepository partnerPaymentRepository,
-                                 UserManager<ApplicationUser> userManager)
+                                 UserManager<ApplicationUser> userManager,
+                                 IOptions<PaymentDetailsOptions> paymentDetails)
         {
             _braintreeConfig = braintreeConfig;
             _serviceRequestRepository = serviceRequestRepository;
             _partnerPaymentRepository = partnerPaymentRepository;
             _userManager = userManager;
+            _paymentDetails = paymentDetails;
         }
 
         [Authorize]
@@ -191,7 +195,21 @@ namespace Breakdown.API.Controllers.v1
                 }
 
                 var overDuePartnerFeeVm = Mapper.Map<OverDuePartnerFeeViewModel>(partnerPayment);
-                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, OverDuePartnerFee = overDuePartnerFeeVm });
+
+                var paymentDetailsVm = new PaymentDetailsResponseViewModel
+                {
+                    BankName = _paymentDetails.Value.BankName,
+                    BranchName = _paymentDetails.Value.BranchName,
+                    AccountHolderName = _paymentDetails.Value.AccountHolderName,
+                    AccountNumber = _paymentDetails.Value.AccountNumber,
+                };
+
+                return StatusCode(StatusCodes.Status200OK, new
+                {
+                    IsSucceeded = true,
+                    OverDuePartnerFee = overDuePartnerFeeVm,
+                    PaymentDetails = paymentDetailsVm
+                });
             }
             catch (Exception ex)
             {
