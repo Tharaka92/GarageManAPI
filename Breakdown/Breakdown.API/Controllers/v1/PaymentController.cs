@@ -153,7 +153,7 @@ namespace Breakdown.API.Controllers.v1
                     partnerPaymentToCreate.AppFeeRemainingAmount = partnerPaymentToCreate.AppFee;
                     partnerPaymentToCreate.FromDate = model.FromDate;
                     partnerPaymentToCreate.ToDate = model.ToDate;
-                    partnerPaymentToCreate.CreatedDate = DateTime.Now;
+                    partnerPaymentToCreate.CreatedDate = DateTime.Now; //Get Sri lankan Time
 
                     int affectedRows = await _partnerPaymentRepository.CreateAsync(partnerPaymentToCreate);
                     if (affectedRows > 0)

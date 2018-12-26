@@ -196,5 +196,30 @@ namespace Breakdown.EndSystems.MySql.Repositories
                 throw ex;
             }
         }
+
+        public async Task<IEnumerable<ServiceRequestDto>> Retrieve(int? partnerId, int? customerId, int? serviceRequestId, int skip, int take)
+        {
+            try
+            {
+                SPRetrieveServiceRequest parameters = new SPRetrieveServiceRequest
+                {
+                    PartnerId = partnerId.HasValue ? partnerId : null,
+                    CustomerId = customerId.HasValue ? customerId : null,
+                    ServiceRequestId = serviceRequestId.HasValue ? serviceRequestId : null,
+                    Skip = skip,
+                    Take = take
+                };
+
+                using (DbConnection connection = DbConnectionFactory.GetConnection(_connectionString.Value.BreakdownDb))
+                {
+                    connection.Open();
+                    return await connection.QueryAsync<ServiceRequestDto>(sql: parameters.GetName(), param: parameters, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

@@ -29,12 +29,7 @@ namespace Breakdown.API.Controllers.v1
         [HttpGet("api/v1/ServiceRequest/GetLatestServiceRequestId")]
         public async Task<ActionResult> GetLatestServiceRequestId(int partnerId, int customerId, string serviceRequestStatus)
         {
-            if (partnerId <= 0)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.InvalidData });
-            }
-
-            if (customerId <= 0)
+            if (partnerId <= 0 || customerId <= 0)
             {
                 return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.InvalidData });
             }
@@ -117,6 +112,36 @@ namespace Breakdown.API.Controllers.v1
 
                 return StatusCode(StatusCodes.Status201Created, new { IsSucceeded = true });
 
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
+            }
+        }
+
+        //[Authorize]
+        [HttpGet("api/v1/ServiceRequest")]
+        public async Task<ActionResult> Get(int? partnerId, int? customerId, int skip = 0, int take = 20)
+        {
+            if (partnerId <= 0 || customerId <= 0)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.InvalidData });
+            }
+
+            try
+            {
+                var serviceRequestDtos = await _serviceRequestRepository.Retrieve(partnerId, customerId, null, skip, take);
+                if (serviceRequestDtos.Count() == 0)
+                {
+                    return StatusCode(StatusCodes.Status204NoContent);
+                }
+
+                var serviceRequestVms = Mapper.Map<IEnumerable<ServiceRequestGetViewModel>>(serviceRequestDtos);
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = true, ServiceRequests = serviceRequestVms });
             }
             catch (Exception ex)
             {

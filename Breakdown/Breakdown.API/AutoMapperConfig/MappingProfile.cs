@@ -34,6 +34,7 @@ namespace Breakdown.API.AutoMapperConfig
             CreateMap<VehicleType, VehicleTypeUpdateViewModel>().ReverseMap();
 
             CreateMap<ServiceRequest, ServiceRequestPostViewModel>().ReverseMap();
+            CreateMap<ServiceRequestDto, ServiceRequestGetViewModel>().ReverseMap();
 
             CreateMap<Rating, RatingPostViewModel>().ReverseMap();
 

@@ -15,5 +15,6 @@ namespace Breakdown.Contracts.Interfaces
         Task<int> CompleteServiceRequestAsync(int serviceRequestId, string serviceRequestStatus, DateTime startDate, DateTime endDate);
         Task<int> UpdatePaymentDetailsAsync(int serviceRequestId, decimal totalAmount, decimal packagePrice, decimal partnerAmount, string paymentStatus, string paymentType);
         Task<PartnerPaymentDto> RetrievePaymentAmountAsync(int partnerId, DateTime fromDate, DateTime toDate);
+        Task<IEnumerable<ServiceRequestDto>> Retrieve(int? partnerId, int? customerId, int? serviceRequestId, int skip, int take);
     }
 }

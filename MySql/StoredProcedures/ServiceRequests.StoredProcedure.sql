@@ -1,4 +1,43 @@
 -- ----------------------------------------------------------------------------
+-- Routine SPRetrieveServiceRequest
+-- ----------------------------------------------------------------------------
+
+DELIMITER $$
+CREATE PROCEDURE `SPRetrieveServiceRequest`(
+PartnerId  int,
+CustomerId int,
+ServiceRequestId int,
+Skip int,
+Take int)
+BEGIN
+ SELECT 
+	ServiceRequests.ServiceRequestId,
+	ServiceRequests.SubmittedDate,
+	ServiceRequests.ServiceRequestStatus,
+	ServiceRequests.PackagePrice,
+	ServiceRequests.PartnerAmount,
+	ServiceRequests.PaymentType,
+    partner.Name AS PartnerName,
+    customer.Name AS CustomerName,
+	service.ServiceName AS ServiceName,
+	vehicletype.Name AS VehicleTypeName,
+	package.Name AS PackageName
+ FROM ServiceRequests 
+	JOIN AspNetUsers partner ON partner.Id = ServiceRequests.PartnerId
+	JOIN AspNetUsers customer ON customer.Id = ServiceRequests.CustomerId
+	JOIN Services service ON service.ServiceId = ServiceRequests.ServiceId
+	JOIN VehicleTypes vehicletype ON vehicletype.VehicleTypeId = ServiceRequests.VehicleTypeId
+	JOIN Packages package ON package.PackageId = ServiceRequests.PackageId
+ WHERE
+ 	(1 = CASE WHEN PartnerId IS NULL THEN 1 WHEN ServiceRequests.PartnerId = PartnerId THEN 1 ELSE 0 END) AND
+	(1 = CASE WHEN CustomerId IS NULL THEN 1 WHEN ServiceRequests.CustomerId = CustomerId THEN 1 ELSE 0 END) AND
+	(1 = CASE WHEN ServiceRequestId IS NULL THEN 1 WHEN ServiceRequests.ServiceRequestId = ServiceRequestId THEN 1 ELSE 0 END)
+ ORDER BY ServiceRequests.SubmittedDate DESC
+ LIMIT Skip, Take;
+END$$
+DELIMITER $$
+
+-- ----------------------------------------------------------------------------
 -- Routine SPRetrieveLatestServiceRequest
 -- ----------------------------------------------------------------------------
 
