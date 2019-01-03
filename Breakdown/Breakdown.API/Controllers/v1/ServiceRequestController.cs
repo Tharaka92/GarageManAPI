@@ -123,7 +123,7 @@ namespace Breakdown.API.Controllers.v1
             }
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet("api/v1/ServiceRequest")]
         public async Task<ActionResult> Get(int? partnerId, int? customerId, int skip = 0, int take = 20)
         {
