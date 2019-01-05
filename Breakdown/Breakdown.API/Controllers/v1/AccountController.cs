@@ -183,6 +183,58 @@ namespace Breakdown.API.Controllers.v1
         }
 
         [Authorize]
+        [HttpPost("api/v1/Account/UpdateProfile")]
+        public async Task<IActionResult> UpdateProfile(UpdateProfileViewModel model)
+        {
+            if (model == null)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new { IsSucceeded = false, Response = ResponseConstants.RequestContentNull });
+            }
+
+            try
+            {
+                if (!TryValidateModel(model))
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, new
+                    {
+                        IsSucceeded = false,
+                        Response = ResponseConstants.ValidationFailure
+                    });
+                }
+
+                var userToUpdate = await _userManager.FindByIdAsync(model.UserId.ToString());
+                if (userToUpdate == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new { IsSucceeded = false, Response = ResponseConstants.NotFound });
+                }
+
+                userToUpdate.Name = model.Name;
+                userToUpdate.PhoneNumber = model.PhoneNumber;
+                userToUpdate.VehicleNumber = model.VehicleNumber;
+
+                var result = await _userManager.UpdateAsync(userToUpdate);
+                if (!result.Succeeded)
+                {
+                    return StatusCode(StatusCodes.Status417ExpectationFailed, new
+                    {
+                        IsSucceeded = false,
+                        Response = ResponseConstants.UpdateFailed
+                    });
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new { IsSucceeded = result.Succeeded });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSucceeded = false,
+                    Response = ResponseConstants.InternalServerError
+                });
+            }
+        }
+
+        [Authorize]
         [HttpGet("api/v1/Account/GetProfileData/{userId:int}")]
         public async Task<IActionResult> GetProfileData(int userId)
         {
