@@ -15,6 +15,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Firebase\garageman-889a4-firebase-adminsdk-ralul-8f6cec7ce0.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="4.0.1" />
     <PackageReference Include="Microsoft.AspNet.SignalR.Core" Version="2.3.0" />
@@ -33,6 +37,12 @@
     <ProjectReference Include="..\Breakdown.Emailer\Breakdown.Emailer.csproj" />
     <ProjectReference Include="..\Breakdown.EmailTemplates\Breakdown.EmailTemplates.csproj" />
     <ProjectReference Include="..\Breakdown.EndSystems\Breakdown.EndSystems.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Firebase\garageman-889a4-firebase-adminsdk-ralul-8f6cec7ce0.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

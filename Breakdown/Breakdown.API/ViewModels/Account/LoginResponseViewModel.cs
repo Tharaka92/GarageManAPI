@@ -21,6 +21,8 @@ namespace Breakdown.API.ViewModels.Account
 
         public string Token { get; set; }
 
+        public string FirebaseToken { get; set; }
+
         public string RoleName { get; set; }
 
         public string ServiceName { get; set; }

@@ -27,6 +27,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using Breakdown.API.Utilities;
+using Breakdown.EndSystems.Firebase;
 
 namespace Breakdown.API
 {
@@ -67,6 +68,7 @@ namespace Breakdown.API
             services.AddTransient<IServiceRequestRepository, ServiceRequestRepository>();
             services.AddTransient<IRatingRepository, RatingRepository>();
             services.AddTransient<IPartnerPaymentRepository, PartnerPaymentRepository>();
+            services.AddTransient<IFirebaseJwtFactory, FirebaseJwtFactory>();
 
             var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtOptions));
             SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["JwtKey"]));

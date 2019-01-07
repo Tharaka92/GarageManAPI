@@ -20,6 +20,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
+using Breakdown.EndSystems.Firebase;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Breakdown.API.Controllers.v1
 {
@@ -32,6 +34,8 @@ namespace Breakdown.API.Controllers.v1
         private readonly IConfiguration _configuration;
         private readonly JwtOptions _jwtOptions;
         private readonly IExpiredTokenRepository _expiredTokenRepository;
+        private readonly IFirebaseJwtFactory _firebaseJwtFactory;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         public AccountController(
             SignInManager<ApplicationUser> signInManager,
@@ -39,7 +43,9 @@ namespace Breakdown.API.Controllers.v1
             RoleManager<IdentityRole<int>> roleManager,
             IConfiguration configuration,
             IOptions<JwtOptions> jwtOptions,
-            IExpiredTokenRepository expiredTokenRepository)
+            IExpiredTokenRepository expiredTokenRepository,
+            IFirebaseJwtFactory firebaseJwtFactory,
+            IHostingEnvironment hostingEnvironment)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -47,6 +53,8 @@ namespace Breakdown.API.Controllers.v1
             _configuration = configuration;
             _jwtOptions = jwtOptions.Value;
             _expiredTokenRepository = expiredTokenRepository;
+            _firebaseJwtFactory = firebaseJwtFactory;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpPost("api/v1/Account/Login")]
@@ -81,6 +89,8 @@ namespace Breakdown.API.Controllers.v1
                 var appUser = await _userManager.Users.Include(u => u.Service).SingleOrDefaultAsync(u => u.Email == model.Email);
                 var roles = await _userManager.GetRolesAsync(appUser);
 
+                string firebaseServiceAccountJson = _hostingEnvironment.ContentRootPath + @"\Firebase\garageman-889a4-firebase-adminsdk-ralul-8f6cec7ce0.json";
+
                 LoginResponseViewModel loginResponse = new LoginResponseViewModel
                 {
                     UserId = appUser.Id,
@@ -90,6 +100,7 @@ namespace Breakdown.API.Controllers.v1
                     Country = appUser.Country,
                     PhoneNumber = appUser.PhoneNumber,
                     Token = await JwtFactory.GenerateJwtToken(model.Email, appUser, _configuration, _jwtOptions, roles.FirstOrDefault()),
+                    FirebaseToken = await _firebaseJwtFactory.GenerateToken(appUser.Id.ToString(), firebaseServiceAccountJson),
                     RoleName = roles.FirstOrDefault(),
                     ProfileImageUrl = appUser.ProfileImageUrl,
                     VehicleNumber = appUser.VehicleNumber,
