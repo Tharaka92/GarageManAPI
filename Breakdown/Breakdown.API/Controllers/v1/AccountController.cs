@@ -163,7 +163,8 @@ namespace Breakdown.API.Controllers.v1
                     Email = model.Email,
                     ServiceId = model.ServiceId,
                     ProfileImageUrl = Request.Scheme + "://" + Request.Host + Request.PathBase + "/images/defaultprofile.jpg",
-                    IsApproved = model.IsApproved
+                    IsApproved = model.IsApproved,
+                    JoinedDate = LocalDateTime.Now()
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -33,6 +34,12 @@ namespace Breakdown.Domain.Entities
         public bool HasADuePayment { get; set; }
 
         public string VerificationCode { get; set; }
+
+        public DateTime JoinedDate { get; set; }
+
+        public string IdentificationNumber { get; set; }
+
+        public string Address { get; set; }
 
         public Service Service { get; set; }
 
