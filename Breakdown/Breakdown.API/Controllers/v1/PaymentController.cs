@@ -145,7 +145,7 @@ namespace Breakdown.API.Controllers.v1
                 }
 
                 var partnerPaymentToCreate = Mapper.Map<PartnerPayment>(partnerPaymentDto);
-                partnerPaymentToCreate.AppFee += partnerPaymentToCreate.CashCount * 100;
+                //partnerPaymentToCreate.AppFee += partnerPaymentToCreate.CashCount * 100;
 
                 if (model.IsNewPaymentCycle)
                 {
