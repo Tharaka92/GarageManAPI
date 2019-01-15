@@ -40,9 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Firebase\garageman-889a4-firebase-adminsdk-ralul-8f6cec7ce0.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Folder Include="Firebase\" />
   </ItemGroup>
 
 </Project>
