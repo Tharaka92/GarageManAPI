@@ -89,7 +89,7 @@ namespace Breakdown.API.Controllers.v1
                 var appUser = await _userManager.Users.Include(u => u.Service).SingleOrDefaultAsync(u => u.Email == model.Email);
                 var roles = await _userManager.GetRolesAsync(appUser);
 
-                string firebaseServiceAccountJson = _hostingEnvironment.ContentRootPath + @"\Firebase\garageman-889a4-firebase-adminsdk-ralul-8f6cec7ce0.json";
+                string firebaseServiceAccountJson = _hostingEnvironment.ContentRootPath + @"\Firebase\motoristprod-firebase-adminsdk-slxka-85ad9265a3.json";
 
                 LoginResponseViewModel loginResponse = new LoginResponseViewModel
                 {
