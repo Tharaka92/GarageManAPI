@@ -162,7 +162,7 @@ namespace Breakdown.API.Controllers.v1
                     UserName = model.Email,
                     Email = model.Email,
                     ServiceId = model.ServiceId,
-                    ProfileImageUrl = Request.Scheme + "://" + Request.Host + Request.PathBase + "/images/defaultprofile.jpg",
+                    ProfileImageUrl = "http://" + Request.Host + Request.PathBase + "/images/defaultprofile.jpg",
                     IsApproved = model.IsApproved,
                     JoinedDate = LocalDateTime.Now()
                 };
