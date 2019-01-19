@@ -21,7 +21,6 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="4.0.1" />
-    <PackageReference Include="Microsoft.AspNet.SignalR.Core" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.1" />
@@ -33,14 +32,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Firebase\garageman-889a4-firebase-adminsdk-ralul-8f6cec7ce0.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Breakdown.Contracts\Breakdown.Contracts.csproj" />
     <ProjectReference Include="..\Breakdown.Emailer\Breakdown.Emailer.csproj" />
     <ProjectReference Include="..\Breakdown.EmailTemplates\Breakdown.EmailTemplates.csproj" />
     <ProjectReference Include="..\Breakdown.EndSystems\Breakdown.EndSystems.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="Firebase\" />
   </ItemGroup>
-
 </Project>
