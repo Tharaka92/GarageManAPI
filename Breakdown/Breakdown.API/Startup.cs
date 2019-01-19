@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Breakdown.API.AutoMapperConfig;
+using Breakdown.API.Hubs;
 using Breakdown.Contracts.Braintree;
 using Breakdown.Contracts.Options;
 using Breakdown.Contracts.Interfaces;
@@ -149,6 +150,8 @@ namespace Breakdown.API
                 options.Password.RequiredUniqueChars = 0;
                 options.Password.RequireLowercase = false;
             });
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -171,6 +174,10 @@ namespace Breakdown.API
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "GarageMan API Version 1.0");
                 c.RoutePrefix = string.Empty;
+            });
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<NotificationHub>("/notificationHub");
             });
             app.UseMvc();
         }
