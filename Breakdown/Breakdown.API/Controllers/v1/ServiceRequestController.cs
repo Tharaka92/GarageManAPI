@@ -111,7 +111,6 @@ namespace Breakdown.API.Controllers.v1
                 }
 
                 return StatusCode(StatusCodes.Status201Created, new { IsSucceeded = true });
-
             }
             catch (Exception ex)
             {
