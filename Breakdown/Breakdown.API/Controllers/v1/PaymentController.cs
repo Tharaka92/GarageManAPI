@@ -15,6 +15,7 @@ using Breakdown.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Microsoft.Extensions.Options;
+using Breakdown.API.Utilities;
 
 namespace Breakdown.API.Controllers.v1
 {
@@ -153,7 +154,7 @@ namespace Breakdown.API.Controllers.v1
                     partnerPaymentToCreate.AppFeeRemainingAmount = partnerPaymentToCreate.AppFee;
                     partnerPaymentToCreate.FromDate = model.FromDate;
                     partnerPaymentToCreate.ToDate = model.ToDate;
-                    partnerPaymentToCreate.CreatedDate = DateTime.Now; //Get Sri lankan Time
+                    partnerPaymentToCreate.CreatedDate = LocalDateTime.Now();
 
                     int affectedRows = await _partnerPaymentRepository.CreateAsync(partnerPaymentToCreate);
                     if (affectedRows > 0)
